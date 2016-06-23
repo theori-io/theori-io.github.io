@@ -49,8 +49,8 @@ links:
 # http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 timezone:    America/Chicago
 future:      true
-highlighter: rouge
 markdown:    kramdown
+highlighter: rouge
 paginate:    5
 paginate_path: "page:num"
 
@@ -62,14 +62,11 @@ kramdown:
   footnote_nr: 1
   entity_output: as_char
   toc_levels: 1..6
-  enable_coderay: true
-
-  coderay:
-    coderay_line_numbers:
-    coderay_line_numbers_start: 1
-    coderay_tab_width: 4
-    coderay_bold_every: 10
-    coderay_css: class
+  enable_coderay: false
+  input: GFM
+  syntax_highlighter_opts:
+      block:
+        line_numbers: true
 
 prose:
   rooturl: '_posts'
