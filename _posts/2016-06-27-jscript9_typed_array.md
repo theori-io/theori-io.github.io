@@ -262,9 +262,9 @@ There are many avenues from here and it depends on the target environment, so we
 
   1. Calculate the base address of `jscript9` from vftable address we leaked.
   2. Construct a fake virtual function table in our heap buffer.
-    * We replace the pointer to `Subarray` with the address to a stack-pivot gadget
-    * `mov esp, ebx; pop ebx; ret`
-    * Note: ebx is the first argument we provide to `subarray`
+      * We replace the pointer to `Subarray` with the address to a stack-pivot gadget
+      * `mov esp, ebx; pop ebx; ret`
+      * Note: ebx is the first argument we provide to `subarray`
   3. Read `VirtualProtect` entry in import table.
   4. Construct a ROP payload that calls `VirtualProtect` on our shellcode buffer.
   5. Overwrite the vftable address of `mv` (`Uint8Array` object) with our fake one.
