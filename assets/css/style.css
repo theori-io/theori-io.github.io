@@ -7,6 +7,12 @@
 .cf:after {
   clear: both; }
 
+.footnotes p {
+    font-size: 1.125rem !important;
+    font-weight: 100 !important;
+    margin-bottom: 1rem !important;
+}
+
 body {
   font-family: "Open Sans", sans-serif;
   height: auto;
