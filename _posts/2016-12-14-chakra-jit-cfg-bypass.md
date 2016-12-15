@@ -99,6 +99,7 @@ for (var i = 0; i < 1000; i++)
     f.call();
 }
 ```
+
 ### Find native code buffer
 
 Once the background thread enters _Encoder::Encode()_, we need to quickly find the temporary native code buffer. One way of finding the buffer is to find the page allocator that was used to allocate it and look through the allocated segments. We noticed that we could find a reference to the page allocator by finding the `ThreadContext` and then the `BackgroundJobProcessor` for the background thread.
