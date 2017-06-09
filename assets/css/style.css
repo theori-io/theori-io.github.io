@@ -7,6 +7,14 @@
 .cf:after {
   clear: both; }
 
+/* fix mathjax styles */
+.MathJax .mo {
+    color: inherit;
+}
+.MathJax .mi {
+    color: inherit;
+}
+
 .footnotes p {
     font-size: 1.125rem !important;
     font-weight: 100 !important;
