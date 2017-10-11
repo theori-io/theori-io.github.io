@@ -64,3 +64,7 @@ South Korea
 <iframe width="450" height="450" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?q=place_id:ChIJdUsKa1qhfDURwEnGk4gdIZU&key=AIzaSyBc32vzyigCjr-HSQQ-rvgge3vHtkHRHXU" allowfullscreen></iframe>
 </div>
 </div>
+
+## Contact
+
+E-mail: contact@theori.io (<a href="{{ site.url }}/assets/pgp/theori.pub.asc" target="_blank">PGP</a>)
