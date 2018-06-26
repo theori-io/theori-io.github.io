@@ -57,7 +57,7 @@ United States
 
 Theori Korea \\
 12F 1605, 364 Gangnam-daero \\
-Seocho-gu \\
+Gangnam-gu \\
 Seoul \\
 South Korea
 </div>
