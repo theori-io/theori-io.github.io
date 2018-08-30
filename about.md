@@ -56,12 +56,12 @@ United States
 ### Seoul (Korea Branch)
 
 Theori Korea \\
-12F 1605, 364 Gangnam-daero \\
+3F, 27 Seolleung-ro 93-gil \\
 Gangnam-gu \\
 Seoul \\
 South Korea
 </div>
-<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d791.381218022788!2d127.02876582925576!3d37.4955370627717!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357ca1509dfe20ab%3A0xe52bb39be1ff4ba5!2z7Yyo7Iqk7Yq47YyM7J2067iMIOqwleuCqCAy7Zi47KCQ!5e0!3m2!1sko!2skr!4v1529990794693" width="450" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>
+<iframe src="<iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d791.2853419587617!2d127.0457537!3d37.5045838!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357ca405f59ac15d%3A0xf7c3741a1cbc1714!2s27+Seolleung-ro+93-gil%2C+Yeoksam+1(il)-dong%2C+Gangnam-gu%2C+Seoul%2C+South+Korea!5e0!3m2!1sen!2sus!4v1535664260322" width="600" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>" width="450" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>
 </div>
 </div>
 
