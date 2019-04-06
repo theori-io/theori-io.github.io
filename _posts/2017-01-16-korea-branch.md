@@ -35,5 +35,5 @@ Are you in Korea and looking for a team to help you solve a challenging security
 <a href="mailto:support@theori.io">us</a>! \\
 We are always open to opportunities with interesting work.
 
-[mou]: http://www.dailysecu.com/news/articleView.html?idxno=17992
+[mou]: https://www.dailysecu.com/?mod=news&act=articleView&idxno=17992
 [raonsecure]: https://www.raonsecure.com
