@@ -51,14 +51,14 @@ CSA 인터페이스는 굉장히 낮은 수준의 연산을 포함하고 어셈�
 CSA가 무엇을 제공하는 지 더 정확히 이해하기 위해 간단한 예제를 하나 들어보겠습니다. 우리는 객체가 문자열이라면 그 길이를 반환하는 새로운 builtin을 추가할 것입니다. 만약 입력으로 들어온 객체가 문자열이 아니라면 builtin은 undefined를 리턴합니다.
 
 먼저, V8의 [builtin-definitions.h](https://cs.chromium.org/chromium/src/v8/src/builtins/builtins-definitions.h)의 `BUILTIN_LIST_BASE` 매크로에 새로운 `GetStringLength` builtin을 추가하고 하나의 인자를 가진다는 걸 상수 `kInputObject`를 통해 명시합니다.
-```C++
+```cpp
 TFS(GetStringLength, kInputObject)
 ```
 `TFS` 매크로는 `TurboFan builtin using standard CodeStub linkage`의 약자로, 코드를 생성하기 위해 CSA를 사용하고 인자는 레지스터를 통해 전달된다는 걸 의미합니다.
 
 그리고 builtin의 내용은 [builtins-string-gen.cc](https://cs.chromium.org/chromium/src/v8/src/builtins/builtins-string-gen.cc)에 정의할 수 있습니다.
 
-```C++
+```cpp
 TF_BUILTIN(GetStringLength, CodeStubAssembler) {
   Label not_string(this);
 
@@ -119,7 +119,7 @@ not_string:
 ```
 우리 builtin이 표준이 아닌 (적어도 C++에서는) 호출 규약을 가지고 있다 하더라도 테스트 케이스를 작성할 수 있습니다. 모든 플랫폼에서 builtin을 테스트하기 위해 아래 코드를 [test-run-stubs.cc](https://cs.chromium.org/chromium/src/v8/test/cctest/compiler/test-run-stubs.cc)에 추가할 수 있습니다.  
 
-```C++
+```c
 TEST(GetStringLength) {
 	HandleAndZoneScope scope;
 	Isolate* isolate = scope.main_isolate();
