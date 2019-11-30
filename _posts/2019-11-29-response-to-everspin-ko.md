@@ -39,10 +39,10 @@ imagefeature: false
 
 #### 허위사실 적시 1
 
-**<에버스핀의 주장>**
+##### 에버스핀의 주장
 발표자료에서 인용된 서버 응답 오류 (503) 스크린샷으로 2017년 블로그 (bpak.org)에 게재된 것과 동일한 이미지를 사용함으로써 마치 dynamic module loading이 작동하지 않는 것처럼 표현하여 2년전에 작동하지 않았던 문제가 현재까지도 작동하지 않은 것 처럼 폄하함
 
-**<답변>**
+##### 답변
 경고장에 언급하신대로 2017년에 서버 컴포넌트의 미작동으로 인해 다이나믹 모듈이 실행되지 않은 점은 익히 알고 있습니다. 하지만, 이전과 별개로 진행된 이번 2019년 연구 실험에서도 마찬가지로 서버가 503 에러를 반환하였고, 그에따라 다이나믹 모듈이 로드 되지 않았습니다. 실험 당시, 따로 루팅 사실을 숨기는 스크립트를 적용하지 않은 루팅된 폰임에도 불구하고 전혀 루팅 탐지가 되지 않았고 그 사실에 기반하여 자료를 정리하였습니다.
 
 또한, 구글에서 구글서버가 아닌 에버스핀과 같은 제3사 서버에서 동적으로 코드를 다운로드 받고 로드(실행)하는 행위는 보안상 매우 위험하다고 판단하여 플레이스토어 정책 위반으로 규정하고 있고, 최근 해당 기술을 사용하는 앱들을 플레이스토어에서 제외시키거나 해당 행위를 더이상 하지 않도록 업데이트를 권고 하였습니다. 위 사유로 더이상 해당 (다이나믹) 기능이 작동하지 않았던것 같다고 발표 중에 언급하며 서버가 제대로 동작하지 않은 합리적인 이유를 찾으려 노력하였습니다.
@@ -53,7 +53,7 @@ imagefeature: false
 
 아래는 해당 시뮬레이션 과정과 결과입니다.
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/7GmUjARNcY0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe style="width:560px; height:315px" src="https://www.youtube.com/embed/7GmUjARNcY0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 위 자료에서 확인할 수 있듯, 서버에서 503 에러가 반환된다면 동적보안모듈이 작동하지 않고 200 정상 코드가 반환될 때만 동적보안모듈이 작동하여 루팅폰을 감지하는 것을 알 수 있습니다.
 비고: 에버스핀이 설명한대로 동적모듈이 작동하지 않는 경우에는 기본적으로 정적모듈을 사용하게 되나, 정적 보안모듈은 기본 설치 상태인 루팅 툴 조차 검출하지 못했습니다.
@@ -62,10 +62,10 @@ imagefeature: false
 
 #### 허위사실 적시 2
 
-**<에버스핀의 주장>**
+##### 에버스핀의 주장
 Eversafe 보안솔루션은 발표에서 언급한것처럼 간단한 조작으로 초기화 API가 호출되지 않도록 한다 해서 솔루션 기능이 우회되지 않는데, 지극히 일부에 해당되는 화면만 띄우고 솔루션 기능을 손쉽게 우회했다는 거짓된 정보를 만들어 발표함
 
-**<답변>**
+##### 답변
 에버스핀에서는 임의로 "해킹완료"에 대한 정의를 하고 귀사가 정한 정의에 저희가 발표한 내용이 일치하지 않는다며 허위사실이라고 주장하고 있습니다. 우선 해당 내용에 대해 발표에서 주장한 것은 크게 두 가지였습니다:
 
 1. 보안모듈 초기화 코드 호출이 앱 main activity constructor (생성자)에 들어가 있어서 찾기 쉬웠고, 해당 부분을 호출하지 않도록 변경하면 보안모듈이 작동하지 않는다.
@@ -78,7 +78,7 @@ Eversafe 보안솔루션은 발표에서 언급한것처럼 간단한 조작으�
 아래는 현재 최신 버전의 앱을 변조하여 보안모듈을 무력화하고, 로그인 및 계좌이체를 성공적으로 하는 모습입니다.
 시연을 위해 단순히 저희 회사명이 담긴 메세지 (토스트) 박스를 띄웠으나, 수신계좌를 임의로 변경하여 의도하지 않은 계좌로 이체하는 앱 변조도 가능합니다.
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/g0pPnW_gBhg" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<iframe style="width:560px; height:315px" src="https://www.youtube.com/embed/g0pPnW_gBhg" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 
 
