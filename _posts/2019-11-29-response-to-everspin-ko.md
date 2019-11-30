@@ -53,7 +53,9 @@ imagefeature: false
 
 아래는 해당 시뮬레이션 과정과 결과입니다.
 
-<iframe style="width:560px; height:315px" src="https://www.youtube.com/embed/7GmUjARNcY0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<p markdown="0">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/7GmUjARNcY0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</p>
 
 위 자료에서 확인할 수 있듯, 서버에서 503 에러가 반환된다면 동적보안모듈이 작동하지 않고 200 정상 코드가 반환될 때만 동적보안모듈이 작동하여 루팅폰을 감지하는 것을 알 수 있습니다.
 비고: 에버스핀이 설명한대로 동적모듈이 작동하지 않는 경우에는 기본적으로 정적모듈을 사용하게 되나, 정적 보안모듈은 기본 설치 상태인 루팅 툴 조차 검출하지 못했습니다.
@@ -78,7 +80,9 @@ Eversafe 보안솔루션은 발표에서 언급한것처럼 간단한 조작으�
 아래는 현재 최신 버전의 앱을 변조하여 보안모듈을 무력화하고, 로그인 및 계좌이체를 성공적으로 하는 모습입니다.
 시연을 위해 단순히 저희 회사명이 담긴 메세지 (토스트) 박스를 띄웠으나, 수신계좌를 임의로 변경하여 의도하지 않은 계좌로 이체하는 앱 변조도 가능합니다.
 
-<iframe style="width:560px; height:315px" src="https://www.youtube.com/embed/g0pPnW_gBhg" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+<p markdown="0">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/g0pPnW_gBhg" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</p>
 
 
 
