@@ -55,11 +55,11 @@ Note: As Everspin explained, the static module is used when the dynamic module d
 
 #### Release of false information 2
 
-##### <Everspin's claim>
+##### Everspin's claim
 
 Eversafe does not get bypassed as easily as described in the talk by simply preventing the initialization API invocation. The research falsely claimed that the protection was easily bypassed by just showing a very simple example.
 
-##### <My response>
+##### My response
 
 Everspin arbitrarily defines "completely hacked" and claims that our research is false because our definitions do not match with theirs. The two points I made during the talk were the following:
 1) It was trivial to locate the Eversafe initialization code since the invocation was in the app's main activity constructor, and if the invocation is prevented, the security module stopped working.
