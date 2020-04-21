@@ -39,12 +39,12 @@ We have offices in South Korea and the United States. We believe that talent is 
 ### Austin, TX (Main Office)
 
 Theori, Inc. \\
-600 Congress Ave \\
-Floor 14 \\
+100 Congress Ave \\
+Suite 2000 \\
 Austin, TX 78701 \\
 United States
 </div>
-<iframe width="450" height="450" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?q=place_id:ChIJnW9wwAm1RIYRpiaGauNxwbU&key=AIzaSyBc32vzyigCjr-HSQQ-rvgge3vHtkHRHXU" allowfullscreen></iframe>
+<iframe width="450" height="450" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/view?zoom=10&center=30.2672%2C-97.7431&key=AIzaSyBc32vzyigCjr-HSQQ-rvgge3vHtkHRHXU" allowfullscreen></iframe>
 </div>
 </div>
 
