@@ -8,13 +8,6 @@ category:
 imagefeature: false
 comments: true
 featured: true
-kramdown:
-  syntax_highlighter_opts:
-    css_class: 'highlight'
-    default_lang: 'c++'
-    span:
-    block:
-      line_numbers: false
 ---
 
 ##### Written by Tim Becker (tjbecker)
