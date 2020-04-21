@@ -81,7 +81,9 @@
     </header>
     {% endif %}
     {% if page.imagefeature %}<article class="notepad-post-content post">{% else %}<article class="notepad-post-content post tag-simple">{% endif %}
-    <div>{{ content }}
+    <div>
+        {% if page.author %}<h5>Written by {{ page.author }}</h5>{% endif %}
+        {{ content }}
     </div>
     </article>
     <div class="cf"></div>

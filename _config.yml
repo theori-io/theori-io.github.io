@@ -64,9 +64,6 @@ kramdown:
   toc_levels: 1..6
   enable_coderay: false
   input: GFM
-  syntax_highlighter_opts:
-      block:
-        line_numbers: true
 
 prose:
   rooturl: '_posts'
@@ -155,3 +152,4 @@ prose:
 include: [".htaccess"]
 exclude: ["lib", "config.rb", "Gemfile", "Capfile", "Gemfile.lock", "config", "log", "Rakefile", "Rakefile.rb", "tmp", "less", "*.sublime-project", "*.sublime-workspace", "test", "spec", "Gruntfile.js", "package.json", "node_modules"]
 gems: [jekyll-paginate]
+plugins: [jekyll-paginate]
