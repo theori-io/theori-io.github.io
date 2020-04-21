@@ -27,6 +27,7 @@ headline:
                     </a>
                 </h3>
             </header>
+            {% if post.author %}<h5>Written by {{ post.author }}</h5>{% endif %}
             <section class="notepad-post-excerpt">
                 <p>{{ post.content | strip_html | truncatewords:40 }}</p>
             </section>
@@ -81,6 +82,7 @@ headline:
                     </a>
                 </h3>
             </header>
+            {% if post.author %}<h5>Written by {{ post.author }}</h5>{% endif %}
             <section class="notepad-post-excerpt">
                 <p>{{ post.content | strip_html | truncatewords:100 }}</p>
             </section>

@@ -284,12 +284,17 @@ main, .notepad-share-icons, .notepad-disqus {
   font-size: 1.25rem;
   margin-top: 0.625rem;
   text-align: center; }
+.notepad-content .notepad-index-post h5 {
+  text-align: center; }
 .notepad-content .notepad-index-post .notepad-post-excerpt p {
   margin: 0;
   font-size: 1.25rem; }
 @media only screen and (min-width: 40.063em) {
   .notepad-content .notepad-index-post .notepad-post-excerpt {
-    text-align: left; } }
+    text-align: left; }
+  .notepad-content .notepad-index-post h5 {
+    text-align: left; }
+}
 .notepad-content .notepad-index-post .notepad-index-post-tags {
   font-size: 0.8125rem;
   float: none;

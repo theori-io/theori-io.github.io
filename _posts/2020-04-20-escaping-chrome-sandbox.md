@@ -8,9 +8,8 @@ category:
 imagefeature: false
 comments: true
 featured: true
+author: Tim Becker (tjbecker)
 ---
-
-##### Written by Tim Becker (tjbecker)
 
 This post will explain how we discovered and exploited [Issue 1062091][bug report], a use-after-free (UAF) in the browser process leading to a sandbox escape in Google Chrome as well as Chromium-based Edge.
 
