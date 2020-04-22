@@ -395,13 +395,14 @@ If you're curious to see all the details, you can find the full exploit in [our 
 
 * [Project Zero Post on Escaping the Chrome Sandbox][virtually unlimited memory]
 * [Mojo docs][mojo docs]
+* [Bug report for similar bug][similar bug]
 
 [bug report]: https://bugs.chromium.org/p/chromium/issues/detail?id=1062091
 [process diagram]: https://docs.google.com/drawings/d/1TuECFL9K7J5q5UePJLC-YH3satvb1RrjLRH-tW_VKeE/edit
 [site isolation]: https://www.chromium.org/Home/chromium-security/site-isolation
 [mojo docs]: https://chromium.googlesource.com/chromium/src.git/+/master/mojo/README.md
 [mojo rename]: https://bugs.chromium.org/p/chromium/issues/detail?id=955171
-[similar bug]: https://bugs.chromium.org/p/chromium/issues/detail?id=977195
+[similar bug]: https://bugs.chromium.org/p/chromium/issues/detail?id=977462
 [commit introduced]: https://chromium.googlesource.com/chromium/src/+/0002875db334deb69d41f74adc15ad40089f04c5%5E%21/#F0
 [commit moved]: https://chromium.googlesource.com/chromium/src/+/d37dc2558a7c841c8439f0cae4dfa5807e56f61e
 [blob api]: https://developer.mozilla.org/en-US/docs/Web/API/Blob
