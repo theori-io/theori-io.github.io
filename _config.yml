@@ -6,9 +6,6 @@ logo_pic:         logo_pic.png
 disqus_shortname: 'theori-io'
 share:            true
 dropcap:			true
-# Change url to your domain. Leave localhost server or blank when working locally.
-# or use the hint from http://jekyllrb.com/docs/github-pages/ to keep this the same 
-# whether working locally or remotely. Start Jekyll with: jekyll serve --baseurl ''
 url:        	  'https://theori.io'
 
 # Owner/author information
@@ -16,20 +13,14 @@ owner:
   name:           Theori
   avatar:         theori.png
   email:          support@theori.io
-  # Use the coder's toolbox at http://coderstoolbox.net/string/#!encoding=xml&action=encode&charset=us_ascii to encode your description into XML string
   description:    "Cybersecurity start-up focused on innovative R&amp;D. We love solving challenges that are said to be impossible!"
-  # Social networking links used in footer. Update and remove as you like.
   twitter:        theori_io
   facebook:       theori.io
   github:         theori-io
-  # instagram:      #hmfaysal
-  # For Google Authorship https://plus.google.com/authorship
-  # google_plus:    #https://plus.google.com/u/0/102602916593522619858
 
 # Analytics and webmaster tools stuff goes here
 google_analytics: UA-137564287-2
 google_verify:
-# https://ssl.bing.com/webmaster/configure/verify/ownership Option 2 content= goes here
 bing_verify:
 
 # Links to include in footer navigation
@@ -39,14 +30,9 @@ links:
     url: /
     external: false
     icon: home
-#  - title: Featured Posts
-#    url: /featured
-#  - title: Categories
-#    url: /categories
   - title: About
     url: /about
 
-# http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 timezone:    America/Chicago
 future:      true
 markdown:    kramdown
@@ -68,7 +54,6 @@ kramdown:
 prose:
   rooturl: '_posts'
   siteurl: 'https://theori.io'
-  relativeLinks: #'http://hmfaysal.github.io/Notepad/links.jsonp'
   media: 'images'
   metadata:
     _posts:
