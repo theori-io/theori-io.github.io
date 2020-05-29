@@ -1,18 +1,13 @@
 ---
 layout: post
 title: "Chakra JIT CFG Bypass"
-description: As promised in our previous blog post, we are going to take a look at a method to bypass Microsoft's Control Flow Guard (CFG) when attacking Internet Explorer and Edge browsers. Our previous proof-of-concept exploit worked by ovewriting the function pointer of an object. However, with CFG in place, we cannot simply do that without aborting. We will assume that the adversay has the read-write memory primitive.
-headline:
-modified: 2016-12-14
-category: research
-imagefeature:
-mathjax:
-chart:
+author: theori
+description:
+categories: [ research ]
+tags: [ Chakra, CFG bypass, JIT, Microsoft, Internet Explorer, Edge, exploit, Control Flow Guard ]
 comments: true
-featured: true
+image: assets/images/2016-12-14/jit_pipeline.png
 ---
-
-## Introduction
 
 As promised in our [previous blog post][previous-post], we are going to take a look at a method to bypass Microsoft's Control Flow Guard (CFG) when attacking Internet Explorer and Edge browsers. Our previous proof-of-concept exploit worked by ovewriting the function pointer of an object. However, with CFG in place, we cannot simply do that without aborting. We will assume that the adversay has the read-write memory primitive.
 
@@ -23,7 +18,7 @@ __Note__: This post was originally planned to be published back in July, but we 
 
 [Control Flow Guard][cfg] is a fairly recent mitigation on Windows that was added by Microsoft. It is designed to be performant while providing an extra layer of protection by validating the targets of the indirect call/jmps. There are many other references[[1]][trend][[2]][core-sec][[3]][mj] that discuss about CFG in detail, so we won't dive in too deeply here.
 
-<img src="../images/2016-12-14/cfg.png"  style="display: block; margin: auto; border: 1px solid #ccc">
+<img src="/assets/images/2016-12-14/cfg.png"  style="display: block; margin: auto; border: 1px solid #ccc">
 
 While the mitigation makes it harder to perform a control-flow hijacking type of attack, the CFG is inherently not perfect. The technology only protects indirect calls and jumps by design, and thus does not protect the stack (i.e. ROP is still possible). Also, it is worth noting that this is a compile-time instrumentation which requires the source code to be recompiled. Even though many of Microsoft's binaries are now protected with CFG, there are a lot more other programs that aren't compiled with CFG mitigation.
 
@@ -32,7 +27,7 @@ While the mitigation makes it harder to perform a control-flow hijacking type of
 
 The Chakra JIT is responsible for generating optimized JIT'ed code for functions and loops that are invoked many times. This process is split into multiple stages, with the _Full JIT Compiler_ and _Garbage Collection_ stages occuring in a background thread. An explaination of the pipeline and helpful diagrams can be found on [MSDN][ie11-jit].
 
-<img src="../images/2016-12-14/jit_pipeline.png"  style="display: block; margin: auto; width: 80%">
+<img src="/assets/images/2016-12-14/jit_pipeline.png"  style="display: block; margin: auto; width: 80%">
 <center style="font-size: 0.9em; margin-top:0; color: #666">JIT Pipeline (from MSDN)</center><br>
 
 Our focus is going to be on the _Full JIT Compiler_ which is responsible for ingesting the bytecode and outputting native code. The high-level process for an individual function or loop can be found in [Func::Codegen()][chakra-func]. First, an intermediate representation (IR) of the bytecode is generated. The IR will be transformed several times: optimizations, register allocation, prolog and epilog, etc. Once the IR is ready, it will be encoded into native code by [Encoder::Encode()][chakra-encoder].
@@ -151,7 +146,7 @@ for (var i = 0; i < 1000; i++)
 
 In order to demonstrate the technique, we adapted the [previous code][previous-code] to target Internet Explorer 11 on Windows 10. The code to achieve a read-write memory primitive hasn't changed, but instead of overwriting a function pointer which will trigger the CFG, we use JIT code overwrite to execute our shellcode.
 
-<img src="../images/2016-12-14/exploit_success.png" style="display: block; margin: auto; border: 1px solid #ccc">
+<img src="/assets/images/2016-12-14/exploit_success.png" style="display: block; margin: auto; border: 1px solid #ccc">
 
 You can find the final proof-of-concept exploit at [https://github.com/theori-io/jscript9-typedarray-cfg][poc-github].
 

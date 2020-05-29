@@ -1,140 +1,61 @@
-title:            Theori
-description:      "Theori, Inc."
-logo:             logo.png
-logo_white:       logo_white.png
-logo_pic:         logo_pic.png
-disqus_shortname: 'theori-io'
-share:            true
-dropcap:			true
-url:        	  'https://theori.io'
+# Site
+name: "Theori"
+title: "Theori"
+description: "Elite. Creative. Versatile."
+logo: 'assets/images/logo.png'
+favicon: 'assets/images/favicon.ico'
+google_analytics: 'UA-137564287-2'
+disqus: 'theori-io'
+include: ["_pages"]
+permalink: /:categories/:title/
 
-# Owner/author information
-owner:
-  name:           Theori
-  avatar:         theori.png
-  email:          support@theori.io
-  description:    "Cybersecurity start-up focused on innovative R&amp;D. We love solving challenges that are said to be impossible!"
-  twitter:        theori_io
-  facebook:       theori.io
-  github:         theori-io
+# Authors
+authors:
+  theori:
+    name: Theori
+    display_name: Theori
+    avatar: 'assets/images/logo_pic.png'
+    email: contact@theori.io
+    web: https://theori.io
+    twitter: https://twitter.com/theori_io
+    description: "Cybersecurity start-up focused on innovative R&amp;D. We love tackling challenges that are said to be impossible to solve!"
 
-# Analytics and webmaster tools stuff goes here
-google_analytics: UA-137564287-2
-google_verify:
-bing_verify:
-
-# Links to include in footer navigation
-# For external links add external: true
-links:
-  - title: Home
-    url: /
-    external: false
-    icon: home
-  - title: About
-    url: /about
-
-timezone:    America/Chicago
-future:      true
-markdown:    kramdown
-highlighter: rouge
-paginate:    5
-paginate_path: "page:num"
-
-# https://github.com/mojombo/jekyll/wiki/Permalinks
-permalink:   /:categories/:title
+# Plugins
+plugins:
+  - jekyll-paginate
+  - jekyll-sitemap
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-archives
+    
+# Archives
+jekyll-archives:
+  enabled:
+    - categories
+  layout: archive
+  permalinks:
+    category: '/category/:name/'
+    
+# Pagination 
+paginate: 6
+paginate_path: /page:num/
+    
+# Other
+markdown: kramdown
 
 kramdown:
-  auto_ids: true
-  footnote_nr: 1
-  entity_output: as_char
-  toc_levels: 1..6
-  enable_coderay: false
   input: GFM
+  syntax_highlighter: rouge
+  syntax_highlighter_opts:
+    block:
+      line_numbers: true
 
-prose:
-  rooturl: '_posts'
-  siteurl: 'https://theori.io'
-  media: 'images'
-  metadata:
-    _posts:
-      - name: "published"
-        field:
-          label: "Published"
-          element: "checkbox"
-          value: "true"
-      - name: "layout"
-        field:
-          element: "hidden"
-          label: "Layout"
-          value: "post"
-      - name: "title"
-        field:
-          label: "Title"
-          element: "text"
-          value: "An Awesome Headline!"
-      - name: "description"
-        field:
-          element: "text"
-          label: "Description"
-          placeholder: "Enter Post Description"
-      - name: "headline"
-        field:
-          element: "text"
-          label: "beadline"
-          placeholder: "Enter Post Headline"
-      - name: "modified"
-        field:
-          element: "text"
-          label: "Has this page been modified?"
-          placeholder: "YYYY-MM-DD"
-      - name: "categories"
-        field:
-          element: "multiselect"
-          label: "Add categories"
-          placeholder: "Choose categories"
-          value: personal
-          options:
-            - name: "Personal"
-              value: personal
-            - name: "Engineering"
-              value: engineering
-            - name: "Physics"
-              value: physics
-            - name: "Psychology"
-              value: psychology
-            - name: "Interesting"
-              value: interesting
-            - name: "Web-Development"
-              value: webdevelopment
-          alterable: true
-      - name: "tags"
-        field:
-          element: "text"
-          label: "Tags"
-          placeholder: "Enter tags, separated by spaces"
-      - name: "imagefeature"
-        field:
-          element: "text"
-          label: "Featured Image"
-          placeholder: "somefile.jpg"
-      - name: "mathjax"
-        field:
-          element: "checkbox"
-          label: "MathJax"
-          value: false
-      - name: "featured"
-        field:
-          element: "checkbox"
-          label: "Featured?"
-          value: false
-      - name: "comments"
-        field:
-          element: "checkbox"
-          label: "Comments"
-          value: false
+# Adsense (change to "enabled" to activate, also your client id and ad slot. Create a new ad unit from your Adsense account to get the slot.)
+adsense: "disabled"
+adsense-data-ad-client: ""
+adsense-data-ad-slot: ""
 
+# Lazy Images ("enabled" or "disabled")
+lazyimages: "disabled"
 
-include: [".htaccess"]
-exclude: ["lib", "config.rb", "Gemfile", "Capfile", "Gemfile.lock", "config", "log", "Rakefile", "Rakefile.rb", "tmp", "less", "*.sublime-project", "*.sublime-workspace", "test", "spec", "Gruntfile.js", "package.json", "node_modules"]
-gems: [jekyll-paginate]
-plugins: [jekyll-paginate]
+exclude: [changelog.md, LICENSE.txt, README.md, Gemfile, Gemfile.lock]

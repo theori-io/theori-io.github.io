@@ -1,15 +1,12 @@
 ---
 layout: post
 title: "Theori Secures Funding from Naver"
+author: theori
 description:
-headline:
-modified: 2018-09-04
-category: news
-imagefeature:
-mathjax:
-chart:
-comments: false
-featured: true
+categories: [ news ]
+tags: [ Naver, investment, funding ]
+comments: true
+image: assets/images/2018-09-04/d2sf.png
 ---
 
 We are excited to announce that [Naver][naver]{:target="_blank"} has invested in Theori, an Austin-based cybersecurity startup that provides consulting, training, vulnerability assesment and R&D services. Theori’s co-founders and employees are security experts who have achieved excellent results for their customers and at internationally acclaimed hacking competitions across the world. Theori has provided services to global IT, automotive and government clients and is recognized as a leader in the global market.

@@ -1,13 +1,13 @@
 ---
 layout: post
 title: "Reverse Engineering Crypto Algorithms From Libraries"
-description: 바이너리 코드로 컴파일 된 암호화 라이브러리에서 암호 알고리즘 추출하고 구현을 해보았다. 특히, 국내 표준 암호 알고리즘이지만 외부에 알려지지 않은 NEAT과 NES 알고리즘에 대해서 알아본다.
-modified: 2017-06-19
-category:
-  - Research
-  - Korean
-featured: true
+author: theori
+description:
+categories: [ research, korean ]
+tags: [ cryptography, NEAT, NES, South Korea, 보안솔루션, 인터넷뱅킹 ]
+comments: true
 mathjax: true
+image: assets/images/2017-06-19/block_cipher_history.png
 ---
 
 한국에서 인터넷 뱅킹이나 홈택스 같은 업무를 보려면 ActiveX 컴포넌트부터 시작해서 매우 다양한 종류의 "보안" 솔루션들을 설치해야만 한다. 하지만, 이러한 보안 솔루션들이 정말로 유저들의 보안을 잘 지켜주도록 설계되고 구현되어 있을까? 과거에도 이미 몇 번 이러한 모듈들이 오히려 공격 표면이 되어 많은 사용자들을 위험에 빠뜨린 사건이 있었지만, 그 구조나 모듈 등이 그 이후로 크게 바뀌지 않았다는 생각이 든다.
@@ -20,7 +20,7 @@ mathjax: true
 
 거의 모든 곳에서 사용되고 있다고 해도 과언이 아닌 VeraPort 플러그인 매니져를 통해서 각 사이트나 부서별로 요구되는 보안 모듈들을 다운받아 설치하고 관리한다.
 
-<img src="{{ site.url }}/images/2017-06-19/veraport.png">
+<img src="/assets/images/2017-06-19/veraport.png">
 
 Theori 한국지사의 주거래 은행인 KEB 하나은행에서 사용되는 보안체계가 얼마나 안전한지 궁금증이 들었기에, 제일 먼저 살펴본 프로그램은 한컴시큐어에서 만든 XecureWeb 컴포넌트였다. 이제 KEB 하나은행을 포함한 대부분의 국내 은행 사이트들은 개인 뱅킹의 통신구간 암호화를 위해 TLS 사용을 하는데, KEB 하나은행의 기업용 사이트는 여전히 HTTP로 연결되고 암호화나 복호화가 필요한 부분에서는 XecureWeb 모듈을 이용하는것을 발견했다.
 
@@ -32,7 +32,9 @@ Theori 한국지사의 주거래 은행인 KEB 하나은행에서 사용되는 �
 
 XecureWeb 클라이언트는 Xgate 서버와 SSL 통신을 하는데, 기존 SSL 프로토콜에서 조금 변형 된 형식을 사용한다. 정확히 말하면 클라이언트 HELO 메세지 패킷에 Path 문자열을 포함하는데 Path의 길이를 나타내는 2바이트 데이터와 Path 값이 추가된다. Xgate 서버는 보통 SSL 서버와 다르지 않은데, SSL 핸드쉐이크 과정에서 생성된 세션 ID에 해당하는 MasterKey를 생성한다. 다만 클라이언트가 보낸 Path와 세션 ID를 tuple로 특정 SSL 파라미터를 맵핑한다. SSL 파라미터는 서버와 클라이언트 각각에서 쓰일 수 있는 MAC Key, Encryption Key, 그리고 IV를 포함한다.
 
-<img src="{{ site.url }}/images/2017-06-19/xecureweb_handshake.png">
+<div class="text-center" style="margin-bottom: 1em">
+<img src="/assets/images/2017-06-19/xecureweb_handshake.png">
+</div>
 
 아래에서 더 다루겠지만, 클라이언트는 지원하는 다양한 cipher suite 리스트를 보내지만 서버는 0x103 값에 해당하는 SEED-CBC/HAS-160 cipher suite만을 지원한다.
 
@@ -53,9 +55,9 @@ POST: ?q=&lt;SessionId&gt;
 
 궁금증이 생겨 거래 은행사는 아니지만 국내에서 많이 사용되고 있는 KB와 신한은행 사이트도 잠깐 살펴봤다.
 
-<img src="{{ site.url }}/images/2017-06-19/kbstar.png">
+<img src="/assets/images/2017-06-19/kbstar.png">
 
-<img src="{{ site.url }}/images/2017-06-19/shinhan.png">
+<img src="/assets/images/2017-06-19/shinhan.png">
 
 Chrome 브라우저로 접속하고 로그인 시도를 하려고 보니 콘솔에 에러가 잔뜩 생겼다. 보다시피 KB에서는 로컬호스트의 포트 16107에 HTTP POST 요청을 보내려다가 실패했고, 신한에서는 로컬호스트의 포트 30419에 웹소켓 접속을 하려다가 실패했다. (중간 중간 보이는 astxsvc 서버에 대한 접속 실패는 안랩의 보안 솔루션 엔드포인트 서버에 접속하려다 실패한것으로 보인다)
 
@@ -71,11 +73,11 @@ Chrome 브라우저로 접속하고 로그인 시도를 하려고 보니 콘솔�
 
 검색을 해보아도 SEED나 ARIA와 달리 많은 자료가 나오지 않았고, 그나마 구글에 돌아다니던 [발표자료](http://www.mathnet.or.kr/real/2006/12/KimByeonsu.ppt){:target="_blank"}에서 그 기원을 찾을 수 있었다. 1998년에 국내 표준으로 등록된 HAS-160이나 현재 국내 민간용으로 제일 많이 사용되고 있는 표준암호인 SEED (1999), 그리고 2004년에 한국 국가 표준 암호 ARIA가 제정되기 이전인 1997년에 NEAT은 국가기관용 표준암호로 제정되었다. 그리고 6여년 뒤인 2003년에 NES로 대체되었다.
 
-<img src="{{ site.url }}/images/2017-06-19/block_cipher_history.png">
+<img src="/assets/images/2017-06-19/block_cipher_history.png">
 
 하지만, 보통의 암호 알고리즘들과는 다르게 구현이라던가 알고리즘 수식 등을 전혀 찾아볼 수 없었고 이 점이 매우 흥미로웠는데, 그리 오래 가지 않아 어떤 한 [블로그](http://m.blog.naver.com/kimsumin75/20052757958){:target="_blank"}에서 그 이유를 발견하게 되었다.
 
-<img src="{{ site.url }}/images/2017-06-19/blog.png">
+<img src="/assets/images/2017-06-19/blog.png">
 
 글쓴이에 따르면 국가기관용 표준암호인 NEAT는 비공개 알고리즘으로, 구조에 대한 스펙이나 코드가 공개되어 있지 않다. 바로 보안 필드에서 흔히 볼 수 있는 "Security through Obscurity"의 한 장면을 목격하고 있는 것이다. 이렇게 숨겨져 있으니 오히려 해커 본능(?)을 자극해서 어떤 암호 알고리즘이기에 공개조차 안했던 것인지 궁금해졌다. 누군가는 해당 암호 체계를 구현해서 사용했어야할 것이기 때문에, 각 알고리즘의 구현체들을 찾아나섰다.
 
@@ -99,14 +101,20 @@ IDEA와 마찬가지로 NEAT는 각기 다른 수학 [군](https://ko.wikipedia.
 
 각 라운드에 사용되는 F와 그 역함수는 다음 구조를 가진다. 각 함수는 입력으로 들어오는 64-bit 데이터를 4개의 16-bit 데이터로 나눈 뒤, 위에서 설명한 연산들을 이용하여 계산한다. 여기서 사용되는 라운드 키 (K<sub>1</sub>, K<sub>2</sub>, K<sub>3</sub>, K<sub>4</sub>)는 키 스케쥴링을 통해 생성한다.
 
-<img src="{{ site.url }}/images/2017-06-19/neat_f.png" style="width: 49%">
-<img src="{{ site.url }}/images/2017-06-19/neat_fi.png" style="width: 49%">
+<div class="row justify-content-center">
+<div class="col col-md-4">
+<img src="/assets/images/2017-06-19/neat_f.png">
+</div>
+<div class="col col-md-4">
+<img src="/assets/images/2017-06-19/neat_fi.png">
+</div>
+</div>
 <figcaption>F 함수와 F <sup>-1</sup> 함수</figcaption>
 
 NEAT의 라운드는 다음과 같은데, 한 블록인 128-bit를 64-bit 두 개로 나눈 뒤 각각을 F와 F의 역함수인 F<sup>-1</sup>에 넣은 뒤 그 결과 값들을 MIX 함수를 통해 섞음으로서 복잡도를 높인다. 앞서 설명한대로 IDEA와 비슷한 구조를 가지지만, 입력 데이터에 의존하는 rotation 연산이 들어있다.
 
 <figure>
-<img src="{{ site.url }}/images/2017-06-19/neat_round.png">
+<img src="/assets/images/2017-06-19/neat_round.png">
 <figcaption>NEAT Round</figcaption>
 </figure>
 
@@ -115,7 +123,7 @@ MIX 함수는 다른 암호 알고리즘에서 쉽게 찾아볼 수 없는 구�
 그리고 half-round인 마지막 라운드에서는 MIX 함수를 사용하지 않고 F와 F<sup>-1</sup>의 결과값을 스왑한다.
 
 <figure>
-<img src="{{ site.url }}/images/2017-06-19/neat_half_round.png">
+<img src="/assets/images/2017-06-19/neat_half_round.png">
 <figcaption>NEAT Half-Round</figcaption>
 </figure>
 
@@ -162,9 +170,17 @@ $$
 
 NES 알고리즘은 크게 네 가지 스텝을 거치며, 첫번째와 마지막을 제외한 보통 라운드 (Round 1~11) 또한 네 가지 연산을 통해 데이터를 변형한다. 또한, NES는 두 개의 P-Box를 가지는데, 라운드가 짝수냐 홀수냐에 따라 각기 다른 P-Box를 사용한다.
 
-<img src="{{ site.url }}/images/2017-06-19/nes_full.png" style="width: 32%">
-<img src="{{ site.url }}/images/2017-06-19/nes_round.png" style="width: 32%">
-<img src="{{ site.url }}/images/2017-06-19/nes_final_round.png" style="width: 32%">
+<div class="row justify-content-center">
+<div class="col col-md-3">
+<img src="/assets/images/2017-06-19/nes_full.png">
+</div>
+<div class="col col-md-3">
+<img src="/assets/images/2017-06-19/nes_round.png">
+</div>
+<div class="col col-md-3">
+<img src="/assets/images/2017-06-19/nes_final_round.png">
+</div>
+</div>
 
 <figcaption>NES 전체과정  |  NES Round  |  NES Final Round</figcaption>
 
@@ -204,6 +220,7 @@ $$
   b_{7} &  b_{15} & b_{23} & b_{31}
 \end{bmatrix}
 $$
+
 예리한 독자는 발견했겠지만, Substitution된 결과 행렬을 그대로 Transposition을 적용하는것이 아니고 마치 8x4 행렬을 두 개의 4x4 행렬로 자른 뒤 이어붙여 4x8 행렬로 만든 듯한 행렬에 대해서 Transpose를 한다. 즉, 결과적으로 $$ b_{1} = S(a_{8}), b_{4} = S(a_{4}) $$ 가 된다.
 
 Permutation 스텝은 P-Box를 행렬 곱셈하는데, 다음은 짝수 라운드에서 해당 과정을 진행하는 것을 수식으로 나타낸 것이다.

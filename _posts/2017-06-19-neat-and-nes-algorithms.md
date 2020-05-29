@@ -1,12 +1,13 @@
 ---
 layout: post
 title: "NEAT and NES Algorithms"
-description: The Korean government provides a cryptography library for its GPKI program. This library contains two symmetric encryption algorithms, NEAT and NES, which have not been published. We have reverse engineered these algorithms and provide a description and working implementations.
-modified: 2017-06-19
-category:
-  - Research
-featured: true
+author: theori
+description:
+categories: [ research ]
+tags: [ cryptography, NEAT, NES, South Korea ]
+comments: true
 mathjax: true
+image: assets/images/2017-06-19/neat.png
 ---
 
 The South Korean Ministry of the Interior provides a cryptography library for its GPKI program. This library contains two symmetric encryption algorithms, NEAT and NES, which have not been published. We reverse engineered these algorithms, and are providing descriptions and working implementations.
@@ -29,14 +30,20 @@ NEAT borrows an addtional operation, data dependent rotation, from [RC5](https:/
 
 * Rotation (&#8920;)
 
-<img src="{{ site.url }}/images/2017-06-19/neat_f.png" style="width: 49%">
-<img src="{{ site.url }}/images/2017-06-19/neat_fi.png" style="width: 49%">
+<div class="row justify-content-center">
+<div class="col col-md-4">
+<img src="/assets/images/2017-06-19/neat_f.png">
+</div>
+<div class="col col-md-4">
+<img src="/assets/images/2017-06-19/neat_fi.png">
+</div>
+</div>
 <figcaption><i>F</i> and <i>F<sup>-1</sup></i> round functions</figcaption>
 
 The 128-bit block is split into two 64-bit halves. The left half is fed into *F* and the right half is fed into *F<sup>-1</sup>*. The round functions split each 64-bit half into four 16-bit integers, perform operations, and then concatenate back into a 64-bit block. Each round splits the 64-bit round key into four 16-bit subkeys, *K<sub>n</sub>*, which are used by the multiplication operation.
 
 <figure>
-<img src="{{ site.url }}/images/2017-06-19/neat_round.png">
+<img src="/assets/images/2017-06-19/neat_round.png">
 <figcaption>NEAT Round</figcaption>
 </figure>
 
@@ -45,7 +52,7 @@ The MIX function does a bitwise XOR of some bits from the left half and the righ
 The last round is a half round without the MIX function. Instead, the left halves and right halves are swapped. This is important because it allows us to use the same code for encryption and decryption.
 
 <figure>
-<img src="{{ site.url }}/images/2017-06-19/neat_half_round.png">
+<img src="/assets/images/2017-06-19/neat_half_round.png">
 <figcaption>NEAT Half-Round</figcaption>
 </figure>
 
@@ -73,9 +80,17 @@ National Encryption Standard (NES) is a block cipher with a 256-bit block size a
 
 NES operates on each byte as an element in [Rijndael's finite field](https://en.wikipedia.org/wiki/Finite_field_arithmetic#Rijndael.27s_finite_field). Bitwise XOR is used as the addition operator, and multiplication is modulo the irreducibble polynomial $$ x^8+x^4+x^3+x+1 $$. It uses a S-box for substitution and the permutation can be viewed as a 8x8 matrix multiplication.
 
-<img src="{{ site.url }}/images/2017-06-19/nes_full.png" style="width: 32%">
-<img src="{{ site.url }}/images/2017-06-19/nes_round.png" style="width: 32%">
-<img src="{{ site.url }}/images/2017-06-19/nes_final_round.png" style="width: 32%">
+<div class="row justify-content-center">
+<div class="col col-md-3">
+<img src="/assets/images/2017-06-19/nes_full.png">
+</div>
+<div class="col col-md-3">
+<img src="/assets/images/2017-06-19/nes_round.png">
+</div>
+<div class="col col-md-3">
+<img src="/assets/images/2017-06-19/nes_final_round.png">
+</div>
+</div>
 
 <figcaption>NES Encryption  |  NES Round  |  NES Final Round</figcaption>
 

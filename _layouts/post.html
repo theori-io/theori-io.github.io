@@ -1,111 +1,211 @@
-<!DOCTYPE html>
-<html>
-<head>
-  {% include head.html %}
-  {% if site.dropcap %}<style type="text/css">@media only screen and (min-width:43.75em){.notepad-post-content div>p:first-child:first-letter{float:left;font-size:4.688rem;line-height:4.375rem;padding-top:.25rem;padding-right:.5rem;padding-left:.188rem;font-family:serif}}</style>{% endif %}
-</head>
-<body class="post-template" itemscope itemtype="http://schema.org/WebPage"> 
-  {% if page.imagefeature %}
-    <main id="notepad-post-container" class="notepad-post-container intro-effect-sliced" role="main">
-    <header class="notepad-post-header">
-    <div class="bg-img"></div>
-    <div class="notepad-post-menu-header" style="padding: 10px; padding-left: 15px;">
-  {% else %}
-    <main id="notepad-post-container-simple" class="notepad-post-container-simple" role="main">
+---
+layout: default
+disqus: false
+archive: false
+post_class: post-template
+---
 
-    <header class="notepad-site-head">
-    <div class="notepad-site-head-menu" style="text-align: center">
-      <a class="notepad-blog-logo" href="{{ site.url }}" style="margin-top: 40px;"><img src="{{ site.url }}/images/{{ site.logo_pic }}" alt="Blog Logo" /></a>
-    <div class="notepad-blog-menu">
-      <div class="notepad-mobile-menu show-for-small">
-        <a href="#"><i class="fa fa-bars"></i></a>
-      </div>
-      <ul class="notepad-menu">
-        <li class="notepad-mobile-close-btn show-for-small text-right">
-        <a href="#"><i class="fa fa-times"></i></a>
-        </li>
-        {% for link in site.links %}
-        <li>{% if link.external %}
-        <a href="{{ link.url }}">{{ link.title }}</a>
-        {% else %}
-        <a href="{{ site.url }}{{ link.url }}">{{ link.title }}</a>
-        {% endif %} </li>
-        {% endfor %}
-      </ul>
-    </div>
-    </div>
-    </header>
 
-    <header class="notepad-post-header-simple">
-    <!--div class="notepad-post-menu-header-simple" style="padding: 10px; padding-left: 15px;"-->
-    <div>
-  {% endif %}
-  <!--
-      <div class="notepad-blog-menu">
-        <div class="notepad-mobile-menu show-for-small">
-          <a href="#"><i class="fa fa-bars"></i></a>
+{% if page.mathjax == true %}
+<!--Load Mathjax-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" integrity="sha256-SDRP1VVYu+tgAGKhddBSl5+ezofHKZeI+OzxakbIe/Y=" crossorigin="anonymous"></script>
+        <script>
+        MathJax.Hub.Config({
+            config: ["MMLorHTML.js"],
+            extensions: ["tex2jax.js","TeX/AMSmath.js","TeX/AMSsymbols.js"],
+            jax: ["input/TeX"],
+            tex2jax: {
+                inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+                displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+                processEscapes: false
+            },
+            TeX: {
+                TagSide: "right",
+                TagIndent: ".8em",
+                MultLineWidth: "85%",
+                equationNumbers: {
+                   autoNumber: "AMS",
+                },
+                unicode: {
+                   fonts: "STIXGeneral,'Arial Unicode MS'" 
+                }
+            },
+            showProcessingMessages: false
+        });
+</script>
+{% endif %}
+
+<!-- Begin Article
+================================================== -->
+<div class="container">
+    <div class="row">
+
+        <!-- Post Share -->
+        <div class="col-md-2 pl-0">
+            {% include share.html %}
         </div>
-        <ul class="notepad-menu">
-          <li class="notepad-mobile-close-btn show-for-small text-right">
-          <a href="#"><i class="fa fa-times"></i></a>
-          </li>
-          {% for link in site.links %}
-          <li>{% if link.external %}
-          <a href="{{ link.url }}">{{ link.title }}</a>
-          {% else %}
-          <a href="{{ site.url }}{{ link.url }}">{{ link.title }}</a>
-          {% endif %} </li>
-          {% endfor %}
-        </ul>
-      </div>
-      -->
-    </div>
-  {% if page.imagefeature %}
-    <div class="notepad-post-title bg-check">
-      <h1>{{ page.title }}</h1>
-      <p>by <strong>{{ site.owner.name }}</strong> &#8212; {% assign tagsize = page.tags.size %}{% if tagsize != 0 %}on {% for tag in page.tags %}<a href="{{ site.url }}/tags/index.html#{{ tag | cgi_encode }}" data-toggle="tooltip" title="Posts tagged with {{ tag }}" rel="tag">{{ tag }}</a>{% unless forloop.last %}&nbsp;&comma;&nbsp;{% endunless %}{% endfor %}{% endif %} <strong><time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%d %b %Y" }}</time></strong></p>
-    </div>
-    <div class="bg-img"></div>
-    </header>
-    <button class="trigger bg-check" data-info="Read more"><span>Trigger</span></button>
-    <img src="{{ site.url }}/images/{{ page.imagefeature }}" alt="cover-image" />
-    {% else %}
-    <div class="notepad-post-title-simple row">
-      <div class="small-12 columns">
-        <div class="notepad-post-meta-simple">
-          <h1>{{ page.title }}</h1>
-          <p>by <strong>{{ site.owner.name }}</strong> &#8212; {% assign tagsize = page.tags.size %}{% if tagsize != 0 %}on {% for tag in page.tags %}<a href="{{ site.url }}/tags/index.html#{{ tag | cgi_encode }}" data-toggle="tooltip" title="Posts tagged with {{ tag }}" rel="tag">{{ tag }}</a>{% unless forloop.last %}&nbsp;&comma;&nbsp;{% endunless %}{% endfor %}{% endif %} <strong><time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%d %b %Y" }}</time></strong></p>
+
+        <!-- Post -->
+        {% assign author = site.authors[page.author] %}
+
+        <div class="col-md-9 flex-first flex-md-unordered">
+            <div class="mainheading">
+
+                <!-- Author Box -->
+                {% if page.author %}
+                <div class="row post-top-meta">
+                    <div class="col-xs-12 col-md-3 col-lg-2 text-center text-md-left mb-4 mb-md-0">
+                        {% if author.avatar %}
+                        <img class="author-thumb" src="{{site.baseurl}}/{{ author.avatar }}" alt="{{ author.display_name }}">
+                        {% else %}
+                        <img class="author-thumb" src="https://www.gravatar.com/avatar/{{ author.gravatar }}?s=250&d=mm&r=x" alt="{{ author.display_name }}">
+                        {% endif %}
+                    </div>
+                    <div class="col-xs-12 col-md-9 col-lg-10 text-center text-md-left">
+                        <a target="_blank" class="link-dark" href="{{ author.web }}">{{ author.display_name }}</a><a target="_blank" href="{{ author.twitter }}" class="btn follow">Follow</a>
+                        <span class="author-description">{{ author.description }}</span>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Post Title -->
+                <h1 class="posttitle">{{ page.title }}</h1>
+
+            </div>
+
+            <!-- Adsense if enabled from _config.yml (change your pub id and slot) -->
+            {% if site.adsense == "enabled" %}
+                {% include adsense-under-header.html %}
+            {% endif %}
+            <!-- End Adsense -->
+
+            <!-- Post Featured Image -->
+            {% if false %}  <!-- page.image -->
+
+            {% if site.lazyimages == "enabled" %}
+            <img class="featured-image img-fluid lazyimg" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAMAAAACCAQAAAA3fa6RAAAADklEQVR42mNkAANGCAUAACMAA2w/AMgAAAAASUVORK5CYII=" data-src="{% if page.image contains "://" %}{{ page.image }}{% else %}{{ site.baseurl }}/{{ page.image }}{% endif %}" alt="{{ page.title }}">
+            {% else %}
+            <img class="featured-image img-fluid" src="{% if page.image contains "://" %}{{ page.image }}{% else %}{{ site.baseurl }}/{{ page.image }}{% endif %}" alt="{{ page.title }}">
+            {% endif %}
+
+            {% endif %}
+            <!-- End Featured Image -->
+
+            <!-- Post Content -->
+            <div class="article-post">
+                <!-- Toc if any -->
+                {% if page.toc %}
+                    {% if page.beforetoc %}
+                        <p><em>{{page.beforetoc}}</em></p>
+                    {% endif %}
+                    <div class="toc mt-4 mb-4 lead">
+                        <h3 class="font-weight-bold">Summary</h3>
+                        {% include toc.html html=content %}
+                    </div>
+                {% endif %}
+                <!-- End Toc -->
+                {{content}}
+            </div>
+
+            <!-- Rating -->
+            {% if page.rating %}
+            <div class="rating mb-4 d-flex align-items-center">
+                <strong class="mr-1">Rating:</strong> {% include star_rating.html %}
+            </div>
+            {% endif %}
+
+            <!-- Post Date -->
+            <p>
+            <small>
+                <span class="post-date"><time class="post-date" datetime="{{ page.date | date:"%Y-%m-%d" }}">{{ page.date | date_to_string }}</time></span>           
+                {% if page.last_modified_at %}
+                (Updated: <time datetime="{{ page.last_modified_at | date_to_xmlschema }}" itemprop="dateModified">{{ page.last_modified_at | date: "%b %-d, %Y" }}</time>)
+                {% endif %}
+                </small>
+            </p>
+
+            <!-- Post Categories -->
+            <div class="after-post-cats">
+                <ul class="tags mb-4">
+                    {% assign sortedCategories = page.categories | sort %}
+                    {% for category in sortedCategories %}
+                    <li>
+                        <a class="smoothscroll" href="{{site.baseurl}}/categories#{{ category | replace: " ","-" }}">{{ category }}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <!-- End Categories -->
+
+            <!-- Post Tags -->
+            <div class="after-post-tags">
+                <ul class="tags">
+                    {% assign sortedTags = page.tags | sort %}
+                    {% for tag in sortedTags %}
+                    <li>
+                        <a class="smoothscroll" href="{{site.baseurl}}/tags#{{ tag | replace: " ","-" }}">#{{ tag }}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <!-- End Tags -->
+
+            <!-- Prev/Next -->
+            <div class="row PageNavigation d-flex justify-content-between font-weight-bold">
+            {% if page.previous.url %}
+            <a class="prev d-block col-md-6" href="{{ site.baseurl }}/{{page.previous.url}}"> &laquo; {{page.previous.title}}</a>
+            {% endif %}
+            {% if page.next.url %}
+            <a class="next d-block col-md-6 text-lg-right" href="{{ site.baseurl }}/{{page.next.url}}">{{page.next.title}} &raquo; </a>
+            {% endif %}
+            <div class="clearfix"></div>
+            </div>
+            <!-- End Categories -->
+
         </div>
-      </div>
-    </div>
-    </header>
-    {% endif %}
-    {% if page.imagefeature %}<article class="notepad-post-content post">{% else %}<article class="notepad-post-content post tag-simple">{% endif %}
-    <div>
-        {% if page.author %}<h5>Written by {{ page.author }}</h5>{% endif %}
-        {{ content }}
-    </div>
-    </article>
-    <div class="cf"></div>
-    {% if site.share %}{% include share.html %}{% endif %}
-    <div class="cf"></div>
+        <!-- End Post -->
 
-    {% include signoff.html %} 
-
-    <div class="cf"></div>
-    {% if site.disqus_shortname and page.comments == true %}
-    <section class="notepad-disqus row">
-    <div class="small-12 columns">
-      <h1 class="notepad-comments-header">Comments</h1>
-      <div id="disqus_thread"></div>
-      {% include disqus_comments.html %}
     </div>
-    </section>
-    {% endif %}
-    <div class="cf"></div>
+</div>
+<!-- End Article
+================================================== -->
 
-    {% include footer.html %} 
-    </main>    
-    {% include scripts.html %} 
-  </body>
-</html>
+<!-- Begin Comments
+================================================== -->
+{% if page.comments != false %}
+    <div class="container">
+        <div id="comments" class="row justify-content-center mb-5">
+            <div class="col-md-8">
+                {% include disqus.html %}
+            </div>
+        </div>
+    </div>
+{% endif %}
+<!--End Comments
+================================================== -->
+
+<!-- Review with LD-JSON, adapt it for your needs if you like, but make sure you test the generated HTML source code first: 
+https://search.google.com/structured-data/testing-tool/u/0/
+================================================== -->
+{% if page.rating %}
+<script type="application/ld+json">
+{
+  "@context": "http://schema.org/",
+  "@type": "Review",
+  "itemReviewed": {
+    "@type": "Thing",
+    "name": "{{ page.title }}"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "{{ author.display_name }}"
+  },
+  "datePublished": "{{ page.date | date:"%Y-%m-%d" }}",
+  "reviewRating": {
+    "@type": "Rating",
+    "ratingValue": "{{ page.rating }}",
+    "bestRating": "5"
+  }
+}
+</script>
+{% endif %}
