@@ -12,7 +12,7 @@ permalink: /about
 <div markdown="1">
 ### We are _hackers_.
 
-Theori was founded by a team of hackers from Carnegie Mellon University who have conquered DEFCON CTF thrice and many other international competitions.
+Theori was founded by a team of hackers from Carnegie Mellon University who have conquered DEFCON CTF five times and many other international competitions.
 Difficult problems excite us: we love to tackle challenges with novel, innovative, and effective solutions.
 
 
