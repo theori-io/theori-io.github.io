@@ -1,15 +1,12 @@
 ---
 layout: post
 title: "Expanding to Korea"
+author: theori
 description:
-headline: 
-modified: 2017-01-16
-category: news
-imagefeature: 
-mathjax: 
-chart: 
-comments: false
-featured: true
+categories: [ news ]
+tags: [ Korea ]
+comments: true
+image: assets/images/2017-01-16/korea.png
 ---
 
 Theori is opening its first branch office in South Korea! The official opening date is February 2017 and
@@ -32,7 +29,7 @@ in enterprise, finance, and government. We will work together to provide better 
 companies.
 
 Are you in Korea and looking for a team to help you solve a challenging security problem? Contact
-<a href="mailto:support@theori.io">us</a>! \\
+<a href="mailto:contact@theori.io">us</a>! \\
 We are always open to opportunities with interesting work.
 
 [mou]: https://www.dailysecu.com/?mod=news&act=articleView&idxno=17992

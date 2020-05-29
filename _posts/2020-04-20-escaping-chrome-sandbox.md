@@ -1,17 +1,16 @@
 ---
 layout: post
 title: "Cleanly Escaping the Chrome Sandbox"
-description: This post will explain how we discovered and exploited Issue 1062091, a use-after-free (UAF) in the browser process leading to a sandbox escape in Google Chrome as well as Chromium-based Edge.
-modified: 2020-04-20
-category:
- - research
-imagefeature: false
+author: theori
+description:
+categories: [ research ]
+tags: [ Chrome, Sandbox Escape, exploit ]
 comments: true
 featured: true
-author: Tim Becker (tjbecker)
+image: assets/images/2020-04-20/GenericBlobDiagram.png
 ---
 
-This post will explain how we discovered and exploited [Issue 1062091][bug report], a use-after-free (UAF) in the browser process leading to a sandbox escape in Google Chrome as well as Chromium-based Edge.
+This post will explain how we discovered and exploited [Issue 1062091][bug report]{:target="_blank"}, a use-after-free (UAF) in the browser process leading to a sandbox escape in Google Chrome as well as Chromium-based Edge.
 
 ## Background
 
@@ -19,9 +18,9 @@ Our goal is to make this post accessible to those unfamiliar with Chrome exploit
 
 ### Chrome Process Architecture
 
-A key pillar of Chrome's security architecture is sandboxing. Chrome limits most of the attack surface of the web (e.g. DOM rendering, script execution, media decoding, etc.) to sandboxed processes. There is one central process, known as the _browser process_, which runs completely unsandboxed. [Here][process diagram] is a nice diagram showing the attack surface in each process and the various communication channels between them.
+A key pillar of Chrome's security architecture is sandboxing. Chrome limits most of the attack surface of the web (e.g. DOM rendering, script execution, media decoding, etc.) to sandboxed processes. There is one central process, known as the _browser process_, which runs completely unsandboxed. [Here][process diagram]{:target="_blank"} is a nice diagram showing the attack surface in each process and the various communication channels between them.
 
-In addition to sandboxing, Chrome implements [site isolation][site isolation], which ensures that data from distinct origins are stored and handled in different sandboxed processes. The effect is that compromising a sandboxed process should not even allow an attacker to leak the user's browsing data for other origins.
+In addition to sandboxing, Chrome implements [site isolation][site isolation]{:target="_blank"}, which ensures that data from distinct origins are stored and handled in different sandboxed processes. The effect is that compromising a sandboxed process should not even allow an attacker to leak the user's browsing data for other origins.
 
 A result of this architecture is that most Chrome exploits require two or more bugs: at least one to get code execution in a sandboxed process (typically a renderer process) and at least one to escape the sandbox. The bug we'll look at allows a compromised renderer process to escape the sandbox.
 
@@ -29,7 +28,7 @@ A result of this architecture is that most Chrome exploits require two or more b
 
 Chrome processes communicate with one another via two IPC mechanisms: _legacy IPC_ and _Mojo_. Legacy IPC is nearly finished being phased out in favor of Mojo and will not be relevant for the discussion of this bug, so we'll only focus on Mojo.
 
-Quoting from the [Mojo Docs][mojo docs],
+Quoting from the [Mojo Docs][mojo docs]{:target="_blank"},
 
 > Mojo is a collection of runtime libraries providing a platform-agnostic abstraction of common IPC primitives, a message IDL format, and a bindings library with code generation for multiple target languages to facilitate convenient message passing across arbitrary inter- and intra-process boundaries.
 
@@ -63,14 +62,14 @@ During a Chrome build, this interface definition is translated into interfaces a
 
 This interface defines one method, `FilterInstalledApps`. By default, all methods are asynchronous (there is a `[Sync]` attribute for overriding this default). In the generated C++ interface, this means the method takes an extra argument which is a callback to invoke with the result. In JavaScript, the function instead returns a `Promise`.
 
-Knowing some Mojo lingo will help with reading the code later in this post. Note that [Mojo has recently changed these names][mojo rename], but not all of the code and docs have been transitioned yet, so we'll give both names where necessary. Also, some of these types are generic over the Mojo interface, but we'll simply refer to the types for `InstalledAppProvider`.
+Knowing some Mojo lingo will help with reading the code later in this post. Note that [Mojo has recently changed these names][mojo rename]{:target="_blank"}, but not all of the code and docs have been transitioned yet, so we'll give both names where necessary. Also, some of these types are generic over the Mojo interface, but we'll simply refer to the types for `InstalledAppProvider`.
 
 * A `MessagePipe` is a channel over which Mojo messages are sent. Messages include method invocations and their replies.
 * A `Remote<InstalledAppProvider>` (still called a `InstalledAppProviderPtr` in the JavaScript bindings) is a proxy object on which one invokes the methods defined in the interface. It ties one end of a `MessagePipe` to a particular interface.
 * A `PendingReceiver<InstalledAppProvider>` wraps the other end of the `MessagePipe`. A `PendingReceiver` must be _bound_ to an implementation of the `InstalledAppProvider` interface in order to route the messages to the appropriate implementation. This binding is called a `Receiver<InstalledAppProvider>`.
 * A `SelfOwnedReceiver<InstalledAppProvider>` is a special type of binding used to tie the lifetime of an implementation object to the lifetime of the underlying `MessagePipe`. A `SelfOwnedReceiver` owns a `std::unique_ptr` to the implementation and is responsible for deleting it when the `MessagePipe` is closed or encounters some error.
 
-There is _a lot_ more that could be said about Mojo, but it is not necessary for this post. For a more details, we would recommend skimming [the docs][mojo docs].
+There is _a lot_ more that could be said about Mojo, but it is not necessary for this post. For a more details, we would recommend skimming [the docs][mojo docs]{:target="_blank"}.
 
 ### RenderFrameHost and Frame-Bound Interfaces
 
@@ -142,7 +141,7 @@ So if this method is invoked after the `RenderFrameHost` has been freed, a use-a
 
 ### A Bug's Life
 
-This bug was introduced in [this commit][commit introduced], which landed in Chrome 81.0.4041.0. A few weeks later, the bug was coincidentally moved behind an experimental command line flag in [this commit][commit moved]. However, this change landed in Chrome 82.0.4065.0, so the bug would have been reachable on all Desktop platforms in Chrome Stable 81.
+This bug was introduced in [this commit][commit introduced]{:target="_blank"}, which landed in Chrome 81.0.4041.0. A few weeks later, the bug was coincidentally moved behind an experimental command line flag in [this commit][commit moved]{:target="_blank"}. However, this change landed in Chrome 82.0.4065.0, so the bug would have been reachable on all Desktop platforms in Chrome Stable 81.
 
 ## Exploitation
 
@@ -150,7 +149,7 @@ This bug was introduced in [this commit][commit introduced], which landed in Chr
 
 While it may be possible to trigger the bug from pure JavaScript, it almost certainly would not be exploitable. Instead, we'll simulate a compromised renderer process by enabling the MojoJS blink bindings (with `--enable-blink-features=MojoJS` on the Chrome command line). These bindings expose the Mojo platform directly to JavaScript, allowing us to bypass the Blink bindings entirely. Note that these bindings can be enabled by a compromised renderer process by flipping a bit in memory and then creating a new JavaScript context, so our exploit code could easily be used in a bug chain.
 
-As a first attempt to trigger the bug, we used the approach from [a similar bug report][similar bug]. The idea is to have the top frame spawn a few subframes, each of which will acquire handles to a bunch of `InstalledAppProvider` instances for their frame. The subframes call `filterInstalledApps` repeatedly to clog the Mojo message pipes. After a few seconds, the top frame will remove the subframes, causing the backing `RenderFrameHost`s to be freed. This also causes a connection error on the `InstalledAppProvider` `MessagePipe`s, but the hope is that the connection error will not be processed until after a `filterInstalledApps` call dereferences the freed pointer.
+As a first attempt to trigger the bug, we used the approach from [a similar bug report][similar bug]{:target="_blank"}. The idea is to have the top frame spawn a few subframes, each of which will acquire handles to a bunch of `InstalledAppProvider` instances for their frame. The subframes call `filterInstalledApps` repeatedly to clog the Mojo message pipes. After a few seconds, the top frame will remove the subframes, causing the backing `RenderFrameHost`s to be freed. This also causes a connection error on the `InstalledAppProvider` `MessagePipe`s, but the hope is that the connection error will not be processed until after a `filterInstalledApps` call dereferences the freed pointer.
 
 We create a page with the following script:
 
@@ -233,7 +232,7 @@ So we now can use `getFreedPtr()` to get an `InstalledAppProviderPtr` for a free
 
 ### Replacing the RenderFrameHostImpl
 
-The bug gives a virtual function call on a freed `RenderFrameHost`. For those unfamiliar with how virtual calls work (or those that need a refresher), [this post][vtable post] might be helpful. To exploit this bug we want to control the freed object's data. We can use the usual strategy to replace a freed object in the browser process: blob spraying. For those unfamiliar, here's a one sentence overview: After we free the subframe, we create a bunch of blobs (using either the [Blob API][blob api] or the Mojo bindings) containing controlled data of length `sizeof(RenderFrameHostImpl)` (this is 0xc38 on Chrome 81.0.4044.69), and we hope that our data ends up replacing the freed object in on the heap.
+The bug gives a virtual function call on a freed `RenderFrameHost`. For those unfamiliar with how virtual calls work (or those that need a refresher), [this post][vtable post]{:target="_blank"} might be helpful. To exploit this bug we want to control the freed object's data. We can use the usual strategy to replace a freed object in the browser process: blob spraying. For those unfamiliar, here's a one sentence overview: After we free the subframe, we create a bunch of blobs (using either the [Blob API][blob api]{:target="_blank"} or the Mojo bindings) containing controlled data of length `sizeof(RenderFrameHostImpl)` (this is 0xc38 on Chrome 81.0.4044.69), and we hope that our data ends up replacing the freed object in on the heap.
 
 Conveniently, this is *extremely* likely to succeed in the case of this bug. The reason is that the `RenderFrameHost` is a huge object, so very few allocations are being made in that heap bucket. In our testing, usually the first blob we allocated replaced the object, but we do a few extra for good measure.
 
@@ -291,7 +290,7 @@ content::ContentClient* ChromeMainDelegate::CreateContentClient() {
 
 Repeating this idea for the second virtual call gives us control of the final call with no constraints on its return value. Here's a visual:
 
-{:.center}
+{:.text-center}
 ![Vtable pointers to avoid a crash][generic blob diagram]
 
 
@@ -339,6 +338,7 @@ using WriteCallback =
 
 In Chrome, `Callback` objects are used to store function pointers with some bound arguments. In terms of memory layout, they simply contain a pointer to a `BindState`, which has the following layout:
 
+{:.table .table-sm .table-striped}
 | Offset | Field                       |
 |--------|-----------------------------|
 | 0      | `refcount`                  |
@@ -352,7 +352,7 @@ In Chrome, `Callback` objects are used to store function pointers with some boun
 
 Not all of these fields matter for us. `polymorphic_invoke` is a pointer to a function responsible for invoking `functor` (the callback function) with the bound arguments. Clearly `polymorphic_invoke` must know how many bound arguments there are, as well as their types, so we choose an invoker function that passes as many args as we need (2 suffices for our target function). Then, using our heap leak, we build a fake `BindState` object with our target function and arguments and place it at a known address in the heap. Now we trigger the UAF to invoke `FileSystemDispatcher::WriteListener::DidWrite` and control the `BindState` pointer of the callback.
 
-{:.center}
+{:.text-center}
 ![Replacement blob for controlled arbitrary call][bindstate blob diagram]
 
 ### Leaking the `CommandLine` Pointer
@@ -389,13 +389,13 @@ Using the above pieces, we outline the full exploit strategy:
 
 All things considered, this bug demonstrates almost ideal conditions for use-after-free exploitation. Replacing the freed object was highly reliable because the object was in a rarely-used heap bucket, and by avoiding the race condition, we could safely trigger the bug as many times as needed. As a result, we were able to achieve process-continuation, meaning that chrome will continue to behave normally from the user's perspective post-exploitation. Further, since we only use code gadgets from `chrome.dll`, the exploit is easy to adapt to other platforms - especially Mac OS, which also lacks inter-process library randomization.
 
-If you're curious to see all the details, you can find the full exploit in [our bug report][bug report].
+If you're curious to see all the details, you can find the full exploit in [our bug report][bug report]{:target="_blank"}.
 
 ### Further Reading
 
-* [Project Zero Post on Escaping the Chrome Sandbox][virtually unlimited memory]
-* [Mojo docs][mojo docs]
-* [Bug report for similar bug][similar bug]
+* [Project Zero Post on Escaping the Chrome Sandbox][virtually unlimited memory]{:target="_blank"}
+* [Mojo docs][mojo docs]{:target="_blank"}
+* [Bug report for similar bug][similar bug]{:target="_blank"}
 
 [bug report]: https://bugs.chromium.org/p/chromium/issues/detail?id=1062091
 [process diagram]: https://docs.google.com/drawings/d/1TuECFL9K7J5q5UePJLC-YH3satvb1RrjLRH-tW_VKeE/edit
@@ -407,6 +407,6 @@ If you're curious to see all the details, you can find the full exploit in [our 
 [commit moved]: https://chromium.googlesource.com/chromium/src/+/d37dc2558a7c841c8439f0cae4dfa5807e56f61e
 [blob api]: https://developer.mozilla.org/en-US/docs/Web/API/Blob
 [vtable post]: https://pabloariasal.github.io/2017/06/10/understanding-virtual-tables/
-[generic blob diagram]: {{ site.url }}/images/2020-04-20/GenericBlobDiagram.png
-[bindstate blob diagram]: {{ site.url }}/images/2020-04-20/BindStateBlobDiagram.png
+[generic blob diagram]: /assets/images/2020-04-20/GenericBlobDiagram.png
+[bindstate blob diagram]: /assets/images/2020-04-20/BindStateBlobDiagram.png
 [virtually unlimited memory]: https://googleprojectzero.blogspot.com/2019/04/virtually-unlimited-memory-escaping.html

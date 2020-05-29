@@ -1,15 +1,12 @@
 ---
 layout: post
 title: "Patch Analysis of MS16-063 (jscript9.dll)"
-description: Last week, Microsoft released the MS16-063 security bulletin for their monthly Patch Tuesday (June 2016) security updates. It addressed vulnerabilities that affected Internet Explorer. Among other things, the patch fixes a memory corruption vulnerability in jscript9.dll related to TypedArray and DataView.
-headline:
-modified: 2016-06-27
-category: research
-imagefeature:
-mathjax:
-chart:
+author: theori
+description:
+categories: [ research ]
+tags: [ patch analysis, MS16-063, Microsoft, Internet Explorer, exploit, jscript9 ]
 comments: true
-featured: true
+image: assets/images/2016-06-27/getdirectitem_june.png
 ---
 
 A couple weeks ago, Microsoft released the [MS16-063][ms16-063]{:target="_blank"} security bulletin for their monthly Patch Tuesday (June 2016) security updates. It addressed vulnerabilities that affected Internet Explorer. Among other things, the patch fixes a memory corruption vulnerability in `jscript9.dll` related to _TypedArray_ and _DataView_.
@@ -21,11 +18,11 @@ As with our previous blog post, we are going to analyze the patch, figure out th
 
 We begin with comparing the May and June versions of `jscript9.dll` in BinDiff:
 
-<img src="{{ site.url }}/images/2016-06-27/bindiff_diff.png" style="display: block; margin: auto;">
+<img src="/assets/images/2016-06-27/bindiff_diff.png" style="display: block; margin: auto;">
 
 Unlike [last time][vbscript-post]{:target="_blank"}, there are many changes to the binary. But if we take a closer look, most of them are related to `DirectGetItem` and `DirectSetItem` functions for various types of `TypedArray` classes. We also see some changes in `GetValue` and `SetValue` functions for the `DataView` class.
 
-<img src="{{ site.url }}/images/2016-06-27/bindiff_diff_2.png" style="display: block; margin: auto;">
+<img src="/assets/images/2016-06-27/bindiff_diff_2.png" style="display: block; margin: auto;">
 
 ##### TypedArray & DataView
 
@@ -52,12 +49,12 @@ With `TypedArray`, as its name suggests, we can specify the data type of the arr
 
 It is easy to see that some code was added (red basic blocks).
 
-<img src="{{ site.url }}/images/2016-06-27/bindiff_func.png" style="display: block; margin: auto;">
+<img src="/assets/images/2016-06-27/bindiff_func.png" style="display: block; margin: auto;">
 <center><strong>June vs. May</strong></center>
 
 Before the patch, `DirectGetItem` and `DirectSetItem` for each typed array simply check the `index` is in bounds and then accesses the buffer.
 
-<img src="{{ site.url }}/images/2016-06-27/getdirectitem_may.png" style="display: block; margin: auto;">
+<img src="/assets/images/2016-06-27/getdirectitem_may.png" style="display: block; margin: auto;">
 <center><strong>GetDirectItem (May)</strong></center>
 
 In pseudo-code, it looks like the following:
@@ -88,7 +85,7 @@ function detach(ab) {
 
 The code that was added to the modified functions checks to make sure the buffer is not detached, which prevents the Use-After-Free.
 
-<img src="{{ site.url }}/images/2016-06-27/getdirectitem_june.png" style="display: block; margin: auto;">
+<img src="/assets/images/2016-06-27/getdirectitem_june.png" style="display: block; margin: auto;">
 <center><strong>GetDirectItem (June)</strong></center>
 
 Fun fact is that this vulnerability was already patched (likely during refactoring) in [ChakraCore][chakra]{:target="_blank"} since the [initial commit][initial-commit]{:target="_blank"} (Jan, 2016) of the code.
@@ -150,7 +147,7 @@ Triggering the bug is quite simple:
 
 Yay, crash!
 
-<img src="{{ site.url }}/images/2016-06-27/poc_crash.png" style="display: block; margin: auto; border: 1px solid #ccc">
+<img src="/assets/images/2016-06-27/poc_crash.png" style="display: block; margin: auto; border: 1px solid #ccc">
 
 Specifically, with our example, it crashes while trying to write data at _FREE_ memory (i.e. `ia[100]` now points to _FREE_ memory). For a successful exploit, we want to allocate objects that we create and control their metadata to give us more powerful primitives: aribtrary memory read and write.
 
@@ -182,14 +179,14 @@ This triggers the [LFH][lfh]{:target="_blank"} for the size class for _sizeof(Ui
 We can see this in action using [VMMap][vmmap]{:target="_blank"}:
 
 <p style="margin-bottom: 0.1em;">
-<img src="{{ site.url }}/images/2016-06-27/vmmap_0.png" style="width: 49%;"><img src="{{ site.url }}/images/2016-06-27/vmmap_1.png" style="width: 49%; float: right;">
+<img src="/assets/images/2016-06-27/vmmap_0.png" style="width: 49%;"><img src="/assets/images/2016-06-27/vmmap_1.png" style="width: 49%; float: right;">
 </p>
 <p>
 <span style="width: 49%; display: inline-block; text-align: center; color: #666">1. Before ArrayBuffer allocation</span><span style="width: 49%; inline-block; text-align: center; color: #666; float: right;">2. After ArrayBuffer allocation (2124 KB)</span>
 </p>
 
 <p style="margin-bottom: 0.1em;">
-<img src="{{ site.url }}/images/2016-06-27/vmmap_2.png" style="width: 49%;"><img src="{{ site.url }}/images/2016-06-27/vmmap_3.png" style="width: 49%; float: right;">
+<img src="/assets/images/2016-06-27/vmmap_2.png" style="width: 49%;"><img src="/assets/images/2016-06-27/vmmap_3.png" style="width: 49%; float: right;">
 </p>
 <p>
 <span style="width: 49%; display: inline-block; text-align: center; color: #666">3. After detaching the buffer</span><span style="width: 49%; inline-block; text-align: center; color: #666; float: right;">4. After allocating Uint8Arrays (LFH)</span>
@@ -272,7 +269,7 @@ There are many avenues from here and it depends on the target environment, so we
 
 The shellcode in the exploit just spawns _notepad.exe_.
 
-<img src="{{ site.url }}/images/2016-06-27/poc_notepad.png" style="display: block; margin: auto; border: 1px solid #ccc">
+<img src="/assets/images/2016-06-27/poc_notepad.png" style="display: block; margin: auto; border: 1px solid #ccc">
 
 Obviously, the process that we spawn is running as Low Integrity and needs to escape the sandbox with a separate vulnerability. We will not discuss it here, since it is out of scope of this blog post. Additional issues that we won't address are: cleaning up after the exploit to prevent IE from crashing, and improving reliability of the heap allocations.
 

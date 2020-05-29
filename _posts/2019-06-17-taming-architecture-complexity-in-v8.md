@@ -1,13 +1,12 @@
 ---
 layout: post
 title: "Taming architecture complexity in V8 (Translation)"
-description: CodeStubAssembler (CSA)는 V8의 중요한 구성 요소 중 하나로 최근 자주 사용되고 있는 언어인 Torque와도 관련이 깊습니다. V8 블로그의 공식 문서를 보면서 CSA에 대해 알아봅시다.
-modified: 2019-06-17
-category:
-  - Research
-  - Korean
-featured: true
-imagefeature: false
+author: theori
+description:
+categories: [ research, korean ]
+tags: [ CSA, Chrome, V8 ]
+comments: true
+image: assets/images/2019-06-17/v8logo.png
 ---
 
 CSA는 크롬 내부의 자바스크립트 엔진인 V8에서 사용되는 중요한 구성 요소입니다. 
@@ -42,7 +41,9 @@ TurboFan의 출현으로 인해 이는 가능하게 되었습니다. TurboFan의
 
 이런 기능들의 결합으로 처음으로 hand-written 어셈블리 코드의 유지 보수 가능한 대안이 실현되었습니다. V8 팀은 TurboFan의 백엔드 위에 구축된 portable assembly를 정의하는 새로운 구성 요소를 만들었습니다. 이를 CodeStubAssembler (CSA) 라고 합니다. CSA는 자바스크립트를 작성/파싱하거나 TurboFan의 JS-specific한 최적화를 적용하지 않고도 기계수준 IR을 바로 생성할 수 있는 API를 제공합니다. 이 코드 생성을 위한 fast-path는 V8 개발자만이 내부적으로 엔진의 속도를 빠르게 하기 위해 사용할 수 있는 것이지만, 크로스 플랫폼에서 최적화된 어셈블리 코드를 생성하기 위한 이 효율적인 방법은 CSA로 만들어진 builtin을 사용한다면 성능에 민감한 V8 인터프리터의 바이트코드 핸들러인 [Ignition](https://v8.dev/docs/ignition)을 포함해 모든 개발자의 자바스크립트 코드를 빠르게 합니다. 아래는 CSA와 자바스크립트의 컴파일 파이프라인입니다.
 
-<img src="{{ site.url }}/images/2019-06-17/pipeline.png">
+<div class="text-center" style="margin-bottom: 1em">
+<img src="/assets/images/2019-06-17/pipeline.png">
+</div>
 
 CSA 인터페이스는 굉장히 낮은 수준의 연산을 포함하고 어셈블리 코드를 작성해본 사람이라면 누구나 익숙해질 수 있습니다. 예를 들어, "주어진 주소로부터 객체 포인터를 로드한다"나 "두 32비트 숫자를 곱한다"와 같은 연산을 포함하고 있습니다. CSA는 런타임이 아닌 컴파일 중에 여러 정확성 버그들을 잡아내기 위해 IR 수준에서 타입 검사를 진행합니다. 예를 들어, V8 개발자는 실수로 인해 메모리에서 로드한 객체 포인터가 32비트 숫자를 곱하는 명령의 입력으로 쓰이지 않는다고 확신할 수 있습니다. 이런 종류의 검증은 직접 작성한 어셈블리 코드에서는 불가능합니다.
 
@@ -52,13 +53,39 @@ CSA가 무엇을 제공하는 지 더 정확히 이해하기 위해 간단한 �
 
 먼저, V8의 [builtin-definitions.h](https://cs.chromium.org/chromium/src/v8/src/builtins/builtins-definitions.h)의 `BUILTIN_LIST_BASE` 매크로에 새로운 `GetStringLength` builtin을 추가하고 하나의 인자를 가진다는 걸 상수 `kInputObject`를 통해 명시합니다.
 
-<div style="max-height: 30rem; max-width: 56.25rem; margin: 0 auto 1rem auto; padding: 0 8px; overflow: auto;"><script src="https://gist.github.com/mathboy7/b82840072ad9e4e3d87c310139bf32ea.js"></script></div>
+```cpp
+TFS(GetStringLength, kInputObject)
+```
 
 `TFS` 매크로는 `TurboFan builtin using standard CodeStub linkage`의 약자로, 코드를 생성하기 위해 CSA를 사용하고 인자는 레지스터를 통해 전달된다는 걸 의미합니다.
 
 그리고 builtin의 내용은 [builtins-string-gen.cc](https://cs.chromium.org/chromium/src/v8/src/builtins/builtins-string-gen.cc)에 정의할 수 있습니다.
 
-<div style="max-height: 30rem; max-width: 56.25rem; margin: 0 auto 1rem auto; padding: 0 8px; overflow: auto;"><script src="https://gist.github.com/mathboy7/9f053052d88e869e746874a11d8bd417.js"></script></div>
+```cpp
+TF_BUILTIN(GetStringLength, CodeStubAssembler) {
+    Label not_string(this);
+
+    // 첫 번째 인자로 정의한 object를 상수로 fetch
+    Node* const maybe_string = Parameter(Descriptor::kInputObject);
+
+    // 아래의 IsString 체크는 인자가 smi가 아니라 object pointer라고 가정하기 때문에
+    // 먼저 입력이 Smi인지 검사하는 과정이 필요하다.
+    // 만약 인자가 Smi라면, |not_string| label로 이동한다.
+    GotoIf(TaggedIsSmi(maybe_string), &not_string);
+
+    // Object가 String인지 확인하고, String이 아니라면 |not_string| label로 이동한다.
+    GotoIfNot(IsString(maybe_string), &not_string);
+
+    // CSA "매크로" LoadStringLength를 사용해 string의 length를 load하고 리턴한다.
+    Return(LoadStringLength(maybe_string));
+
+    // 위의 IsString 검사가 실패했을 때 이동할 label의 location을 정의한다.
+    BIND(&not_string);
+
+    // 입력으로 전달된 Object가 String이 아니다. Javascript Undefined 상수를 리턴한다.
+    Return(UndefinedConstant());
+}
+```
 
 위의 예제에서, 두 가지 종류의 명령이 사용되었습니다. 
 먼저, `GotoIf`나 `Return`과 같이 직접적으로 하나 혹은 두 개의 어셈블리어로 바뀌는 `primitive` CSA 명령이 있습니다.
@@ -70,15 +97,56 @@ CSA가 무엇을 제공하는 지 더 정확히 이해하기 위해 간단한 �
 
 위 코드를 추가하고 V8을 컴파일한 후, V8의 스냅샷을 준비하기 위해 builtin 함수를 컴파일하는 툴인 `mksnapshot`을 실행할 수 있습니다. `--print-code` 옵션을 전달하면 각 builtin에서 생성된 어셈블리 코드를 출력할 수 있습니다. 출력된 결과에 `GetStringLength`를 `grep`하면, x64에서 다음과 같은 결과를 얻을 수 있습니다. (가독성을 좋게 하기 위해 코드 출력을 정리했습니다.)
 
-<div style="max-height: 30rem; max-width: 56.25rem; margin: 0 auto 1rem auto; padding: 0 8px; overflow: auto;"><script src="https://gist.github.com/mathboy7/30c228b70c4eb0f444ab5f9f791e1a87.js"></script></div>
+```nasm
+	test al, 0x1
+	jz not_string
+	movq rbx, [rax-0x1]
+	cmpb [rbx+0xb], 0x80
+	jnc not_string
+not_string:
+	movq rax, [rax+0xf]
+	retl
+```
 
 32비트 ARM에선 `mksnapshot`을 통해 다음 코드가 생성됩니다.
 
-<div style="max-height: 30rem; max-width: 56.25rem; margin: 0 auto 1rem auto; padding: 0 8px; overflow: auto;"><script src="https://gist.github.com/mathboy7/d6ece999849634b2b5cb4ba06c351045.js"></script></div>
+```nasm
+	tst r0, #1
+	beq +28 -> not_string
+	ldr r1, [r0, #-1]
+	ldrb r1, [r1, #+7]
+	cmp r1, #128
+	bge +12 -> not_string
+	ldr r0, [r0, #+7]
+	bx lr
+not_string:
+	ldr r0, [r10, #+16]
+	bx lr
+```
 
 우리 builtin이 표준이 아닌 (적어도 C++에서는) 호출 규약을 가지고 있다 하더라도 테스트 케이스를 작성할 수 있습니다. 모든 플랫폼에서 builtin을 테스트하기 위해 아래 코드를 [test-run-stubs.cc](https://cs.chromium.org/chromium/src/v8/test/cctest/compiler/test-run-stubs.cc)에 추가할 수 있습니다.  
 
-<div style="max-height: 30rem; max-width: 56.25rem; margin: 0 auto 1rem auto; padding: 0 8px; overflow: auto;"><script src="https://gist.github.com/mathboy7/2a11f31ce1f0498fd3060e89df72dd95.js"></script></div>
+```cpp
+TEST(GetStringLength) {
+    HandleAndZoneScope scope;
+    Isolate* isolate = scope.main_isolate();
+    Heap* heap = isolate->heap();
+    Zone* zone = scope.main_zone();
+
+    // 입력이 string일 때의 case를 테스트
+    SubTester tester(isolate, zone, Builtins::kGetStringLength);
+    Handle<String> input_string(
+      isolate->factory()->
+        NewStringFromAsciiChecked("Oktoberfest"));
+    Handle<Object> result1 = tester.Call(input_string);
+    CHECK_EQ(11, Handle<Smi>::cast(result1)->value());
+
+    // 입력이 string이 아닐 때의 case를 테스트 (e.g. undefined)
+    Handle<Object> result2 = 
+    tester.Call(factory->undefined_value());
+    CHECK(result2->IsUndefined(isolate));
+}
+```
 
 
 다양한 종류의 builtin을 위해 CSA를 사용하는 방법과 추가적인 예제들은 [이 위키 페이지](https://v8.dev/docs/csa-builtins)에서 확인할 수 있습니다. 
@@ -102,5 +170,9 @@ CSA는 여러 플랫폼을 대상으로 하는 범용 어셈블리 언어 그 �
 `[1]` 이는 ECMAScript 표준에서 제공하는 여러 내장 함수들로, `Array.prototype.reverse`와 같은 함수들을 포함합니다.
 
 `[2]` V8의 TurboFan 컴파일러는 최적화된 코드를 생성하기 위해 타입 정보를 수집합니다. 가령, 다음과 같은 코드를 최적화한다고 합시다.
-<div style="max-height: 30rem; max-width: 56.25rem; margin: 0 auto 1rem auto; padding: 0 8px; overflow: auto;"><script src="https://gist.github.com/mathboy7/848680222beabc040341acb514b49f3f.js"></script></div>
+```javascript
+function add(a, b) {
+	return a + b;
+}
+```
 자바스크립트는 동적 타입 언어기 때문에 a와 b에 어떤 값이 올지 아무도 모릅니다. 그러나, `add` 함수가 두 개의 `smi`(V8에서 내부적으로 사용하는 정수 타입) 타입을 계속 입력으로 받아 호출된다면, TurboFan은 `add` 함수의 인자로 `smi`가 들어올 것을 가정하고 코드를 생성하게 됩니다. 이렇게 생성된 코드는 a와 b에 올 수 있는 모든 타입을 고려할 필요가 없어 매우 빨라지며, 인자가 `smi` 타입이 아닐 경우의 예외 처리 코드를 추가하는 것으로 안전을 보장합니다.

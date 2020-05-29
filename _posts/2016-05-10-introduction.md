@@ -1,15 +1,12 @@
 ---
 layout: post
 title: "Introduction"
-description: 
-headline: 
-modified: 2016-05-10
-category: news
-imagefeature: 
-mathjax: 
-chart: 
+author: theori
+categories: [ news ]
+tags: [ theori, news, blog, office, austin ]
+image: assets/images/2016-05-10/IMG_6152.jpg
+description: "This is the beginning of Theori's technical blog. We are excited to share knowledge we gained through our research."
 comments: false
-featured: true
 ---
 
 Hello, everybody! It's actually been a couple months since we started operating, but we've been busy with traveling and stuff.
@@ -28,21 +25,30 @@ For people who don't know us very well, our researchers have done some work rela
 * Trusted Computing (Chain of Trust) Verification
 * Security Audit on Source &amp; Binary Code
 
-Do you have really challenging problems to solve? Contact <a href="mailto:support@theori.io">us</a>!<br>
+Do you have really challenging problems to solve? Contact <a href="mailto:contact@theori.io">us</a>!<br>
 We are always open to opportunities with interesting work.
 
 
 Also, we moved to a new office last week. Here are some pictures:
 
-<img src="{{ site.url }}/images/2016-05-10/IMG_6143.jpg" style="width: 100%; display: block; margin: auto;">
+<img src="/assets/images/2016-05-10/IMG_6143.jpg">
 <br>
-<img src="{{ site.url }}/images/2016-05-10/IMG_6149.jpg" style="width: 49%">
-<img src="{{ site.url }}/images/2016-05-10/IMG_6153.jpg" style="width: 49%; float: right">
-<br><br>
-<img src="{{ site.url }}/images/2016-05-10/IMG_6152.jpg" style="width: 100%; display: block; margin: auto;">
+<div class="row justify-content-between">
+<div class="col-md-6">
+<img src="/assets/images/2016-05-10/IMG_6149.jpg">
+</div>
+<div class="col-md-6">
+<img src="/assets/images/2016-05-10/IMG_6153.jpg">
+</div>
+</div>
 
+<br />
+
+<div markdown="1">
 The address is [`Theori, 600 Congress Ave, 14th Floor, Austin, TX 78701`][map]{:target="_blank"} in case you want to visit or mail us :)
 
 We have some exciting news we are preparing to share, so stay tuned to our blog.
 
 [map]: https://goo.gl/maps/Yz5amgknNCq
+
+</div>
