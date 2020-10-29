@@ -6,7 +6,6 @@ description:
 categories: [ research ]
 tags: [ Chrome, Sandbox Escape, exploit ]
 comments: true
-featured: true
 image: assets/images/2020-04-20/GenericBlobDiagram.png
 ---
 
