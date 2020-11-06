@@ -10,7 +10,7 @@ featured: true
 image: assets/images/2020-10-21/XenVBDStateDiagram.svg
 ---
 
-This post explains [a denial-of-service (and potentially out-of-bounds write) vulnerability][xsa-331]{:target="_blank"} we discovered in the Xen paravirtualization driver in Linux, and how a virtualization platform may be compromised without direct attacks to the hypervisor.
+This post explains a denial-of-service (and potentially out-of-bounds write) vulnerability ([CVE-2020-27675]{:target="_blank"}, [XSA-331]{:target="_blank"}) we discovered in the Xen paravirtualization driver in Linux, and how a virtualization platform may be compromised without direct attacks to the hypervisor.
 
 ## Background
 
@@ -403,7 +403,8 @@ Although the vulnerability's effect is mostly limited to denial of service, syst
 Disaggregation (i.e. relocating backends into a separate domain) is an effective way to mitigate this vulnerability, although many setups are known not to practice it and place backends in the most critical domain (enumerating affected service providers is out of scope of this post).
 To some extent, this yields an interesting case where a virtualized infrastructure can be compromised without attacking the hypervisor itself.
 
-[xsa-331]: https://xenbits.xen.org/xsa/advisory-331.html
+[CVE-2020-27675]: https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-27675
+[XSA-331]: https://xenbits.xen.org/xsa/advisory-331.html
 [Xen Project]: https://xenproject.org/
 [pvops]: https://wiki.xen.org/wiki/XenParavirtOps
 [gnttab]: https://wiki.xen.org/wiki/Grant_Table
