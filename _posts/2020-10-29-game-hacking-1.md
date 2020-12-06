@@ -6,7 +6,6 @@ description:
 categories: [ research, korean ]
 tags: [ game, cheats, hacks, wall hack, d3d ]
 comments: true
-featured: true
 image: assets/images/2020-10-29/image_10.png
 ---
 
@@ -641,6 +640,6 @@ D3D9와 마찬가지로 `DepthEnable` 필드를 활성화/비활성화하면서 
 
 지금까지 월핵에 사용되는 Direct3D 후킹의 원리를 분석하고 구현해 보았다. 게임핵이라 하면 보통 수치나 게임의 코드 등 메모리를 단순하게 변조하는 것이 연상되는데 월핵은 이와 달리 그래픽과 관련된 코드를 후킹하는 것으로 구현되는 것을 알 수 있었다.
 
-다음 글에서는 최근 월핵보다 훨씬 더 많이 사용되고 있는 ESP 핵과 많은 FPS 온라인 게임들을 괴롭히는 Aimbot에 대해 다룰 예정이다.
+다음 글에서는 최근 월핵보다 훨씬 더 많이 사용되고 있는 ESP 핵에 대해 다룰 예정이다.
 
 [^1]: jmp로 패치한 후킹 코드의 크기가 5바이트이기 때문
