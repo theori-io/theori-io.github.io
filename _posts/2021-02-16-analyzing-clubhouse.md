@@ -415,3 +415,49 @@ Cloudflare 프록시를 사용하기 때문에 정확한 IP의 획득이 어렵�
 긴 글 읽어주셔서 감사합니다. 클럽하우스에서 보아요~👋 (@brianairb 팔로우 부탁드립니다!)
 
 &nbsp;
+
+
+---
+
+&nbsp;
+
+## Update #1: v0.1.28
+
+블로그 글을 공개하고 보니 v0.1.28 버전으로 업데이트가 있어서, 빠르게 살펴봤습니다. 사실상 v0.1.27과 기능면에서 크게 달라진 것은 없는데, 위에서 언급한대로 Geofencing과 Encryption 관련 부분이 변경되었습니다.
+
+##### Geofencing
+
+클럽하우스 앱에서는 이제 `AgoraRtcEngineConfig` 클래스에 있는 `areaCode` 값을 0xFFFFFFFE (즉, ~0x1)으로 셋팅함으로써 연결 허용되는 지역에서 중국을 제외하게 됩니다. 사실 위에서는 한 지역만 제외하는 것은 어려울 것이라고 했는데, 이는 docs 문서에 있었던 문구만 보고 그렇게 생각을 했었습니다. 하지만, 실제로 API 함수에 대한 docs를 살펴보니 "You can use the bitwise OR operator (\|) to specify multiple areas." 라고 추가적으로 설명되어 있는 것을 발견하였습니다. 동시에 여러 지역을 설정할 수 있는 것이죠.
+
+```objc
+typedef NS_ENUM(NSUInteger, AgoraIpAreaCode ) {
+   AgoraIpAreaCode_CN = ( 1 < < 0 ),
+   AgoraIpAreaCode_NA = ( 1 < < 1 ),
+   AgoraIpAreaCode_EUR = ( 1 < < 2 ),
+   AgoraIpAreaCode_AS = ( 1 < < 3 ),
+   AgoraIpAreaCode_GLOBAL = ( 0 xFFFFFFFF ),
+};
+```
+
+위 정의를 보면 알 수 있듯 CN (중국) AreaCode는 0x1의 값으로 표현됩니다.
+
+
+
+##### Encryption
+
+아직 실제로 적용은 안된 것 같습니다만, 서버사이드에서 원하면 언제든지 활성화 할 수 있도록 지원하는 코드가 추가 되었습니다. API 서버에서 Encryption key를 전달받았을 때만 아래 소개할 코드 형태로 암호화를 활성화 하게 됩니다. 본문에서 설명한 내용 중 Built-in 암호화 방식을 사용하는데, 기존에 클럽하우스 API를 통해 RTC Token를 전달되는 것과 마찬가지로 Encryption key가 전달되고 해당 key를 사용해서 Agora RTC 채널 세션을 만들게 됩니다. 사용되는 Encryption Mode는 `AES256XTS`, 즉 AES-256-XTS 입니다.
+
+```swift
+let config = AgoraEncryptionConfig()
+config.encryptionKey = encryptionKey
+config.encryptionMode = .AES256XTS
+agoraKit.enableEncryption(true, encryptionConfig: config)
+```
+
+즉, 해당 기능이 활성화되어 사용되면 암호화 키가 API 서버에서 직접 클라이언트로 제공되므로 Agora 서버에서는 암호화 된 데이터를 열람할 수 없게 됩니다. 마찬가지로, UDP 패킷으로 전송되는 데이터가 암호화 되고 기능이 활성화 된 후 직접 검증이 필요하긴 하겠지만 documentation 대로 SDK가 정말로 Agora 서버에게 절대 이 Encryption key를 보내지 않는다면 위에서 언급한 Public Wi-Fi 등의 시나리오에서도 도/감청 및 변조가 불가능해지게 됩니다.
+
+&nbsp;
+
+빠른 대처를 한 클럽하우스에게 박수를 쳐줘야할지, 이미 이런 기능들을 설계하고 구현해둔 Agora를 칭찬해야할지 모르겠네요. 물론 처음부터 이런 우려사항이 없도록 구현됐다면 가장 좋았겠지만, 둘 다 칭찬합니다!
+
+&nbsp;
