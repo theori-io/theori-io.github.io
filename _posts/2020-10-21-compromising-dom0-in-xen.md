@@ -6,7 +6,7 @@ description:
 categories: [ research ]
 tags: [ Hypervisor, exploit ]
 comments: true
-featured: true
+featured: false
 image: assets/images/2020-10-21/XenVBDStateDiagram.svg
 ---
 
