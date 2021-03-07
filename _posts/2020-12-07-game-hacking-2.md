@@ -6,7 +6,6 @@ description:
 categories: [ research, korean ]
 tags: [ game, cheats, hacks, esp, bone, d3d ]
 comments: true
-featured: true
 image: assets/images/2020-12-07/image_00.png
 ---
 
