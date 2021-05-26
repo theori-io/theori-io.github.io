@@ -281,6 +281,7 @@ Our exploit, working as of iOS 14.6 and macOS 11.4, can be found [here][exploit]
 * [LiveOverflow Browser Exploitation Series][liveoverflow]{:target="_blank"}
 * [JITSploitation][jitsploitation]{:target="_blank"}: Project Zero series on exploiting a Safari JIT bug
 
+
 [patch commit]: https://github.com/WebKit/WebKit/commit/d56afe6836db40cdea22eaa6b47c56a6197a8bab
 [ohjin exploit]: https://gist.github.com/ujin5/6b9a32eedc5a39d714a3a72f06efffe5
 [webaudio api]: https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API
