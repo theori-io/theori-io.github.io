@@ -6,7 +6,6 @@ description:
 categories: [ research, korean ]
 tags: [ clubhouse, iOS, app, RTC ]
 comments: true
-featured: true
 image: assets/images/2021-02-16/image_0.png
 ---
 
