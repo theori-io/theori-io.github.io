@@ -6,7 +6,7 @@ description:
 categories: [ research, korean ]
 tags: [ game, cheats, hacks, aimbot, fps ]
 comments: true
-featured: true
+featured: false
 image: assets/images/2021-03-07/image_00.png
 ---
 
