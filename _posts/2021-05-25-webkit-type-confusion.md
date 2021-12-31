@@ -6,7 +6,7 @@ description:
 categories: [ research ]
 tags: [ WebKit, Safari, RCE, Type Confusion]
 comments: true
-featured: true
+featured: false
 image: assets/images/2021-05-25/overwrite.png
 ---
 
