@@ -60,7 +60,7 @@ Theori Korea \\
 5F, 414, Teheran-ro \\
 Gangnam-gu Seoul, 06193 \\
 South Korea
-<iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d791.2853419587617!2d127.0457537!3d37.5045838!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357ca405f59ac15d%3A0xf7c3741a1cbc1714!2s27+Seolleung-ro+93-gil%2C+Yeoksam+1(il)-dong%2C+Gangnam-gu%2C+Seoul%2C+South+Korea!5e0!3m2!1sen!2sus!4v1535664260322" width="90%" height="450" frameborder="0" style="border:0" allowfullscreen=""></iframe>
+<iframe data-v-787293d2="" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1002.728761492947!2d127.05092412572657!3d37.50485273895438!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357ca41033030779%3A0x7eae364c703b15ff!2s414%20Teheran-ro%2C%20Daechi%204(sa)-dong%2C%20Gangnam-gu%2C%20Seoul!5e0!3m2!1sen!2skr!4v1626414704647!5m2!1sen!2skr" width="90%" height="450" frameborder="0" allowfullscreen="allowfullscreen" style="border: 0px;"></iframe>
 </div>
 </div>
 </div>
