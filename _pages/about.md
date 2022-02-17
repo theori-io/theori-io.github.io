@@ -57,10 +57,10 @@ United States
 ##### Seoul (Korea Branch)
 
 Theori Korea \\
-3F, 27 Seolleung-ro 93-gil \\
-Gangnam-gu, Seoul, 06151 \\
+5F, 414, Teheran-ro \\
+Gangnam-gu Seoul, 06193 \\
 South Korea
-<iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d791.2853419587617!2d127.0457537!3d37.5045838!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357ca405f59ac15d%3A0xf7c3741a1cbc1714!2s27+Seolleung-ro+93-gil%2C+Yeoksam+1(il)-dong%2C+Gangnam-gu%2C+Seoul%2C+South+Korea!5e0!3m2!1sen!2sus!4v1535664260322" width="90%" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>
+<iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d791.2853419587617!2d127.0457537!3d37.5045838!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x357ca405f59ac15d%3A0xf7c3741a1cbc1714!2s27+Seolleung-ro+93-gil%2C+Yeoksam+1(il)-dong%2C+Gangnam-gu%2C+Seoul%2C+South+Korea!5e0!3m2!1sen!2sus!4v1535664260322" width="90%" height="450" frameborder="0" style="border:0" allowfullscreen=""></iframe>
 </div>
 </div>
 </div>
