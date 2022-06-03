@@ -6,7 +6,7 @@ description:
 categories: [ news ]
 tags: [ Qubit, audit, smart contract ]
 comments: true
-featured: true
+featured: false
 image: assets/images/2022-01-30/qubit_xchain.png
 ---
 
