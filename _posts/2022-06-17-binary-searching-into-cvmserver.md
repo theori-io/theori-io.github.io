@@ -10,7 +10,7 @@ featured: true
 image: assets/images/2022-06-17/cvmserver.png
 ---
 
-During the analysis of the patch for [CVE-2021-30724](https://www.trendmicro.com/en_us/research/21/f/CVE-2021-30724_CVMServer_Vulnerability_in_macOS_and_iOS.html) while writing a Fermium-252 report, our researcher ([@jinmo123](https://twitter.com/jinmo123)) discovered a vulnerability introduced by the patch. The vulnerability was reported to Apple and fixed in [macOS 12.4](https://support.apple.com/HT213257). It was a fun bug to exploit.
+During the analysis of the patch for [CVE-2021-30724](https://www.trendmicro.com/en_us/research/21/f/CVE-2021-30724_CVMServer_Vulnerability_in_macOS_and_iOS.html) while writing a Fermium-252 report, our researcher ([@jinmo123](https://twitter.com/jinmo123)) discovered a vulnerability introduced by the patch. The vulnerability was reported to Apple and fixed in [macOS 12.4](https://support.apple.com/HT213257).
 
 ## Background
 
@@ -110,7 +110,7 @@ free(descriptors);
 
 Here, [3] and [4] are all loaded from an uninitialized heap chunk. So the attacker can de-allocate arbitrary memory pages in the CVMServer process with `munmap` by controlling the uninitialized values.
 
-Usually, it is done by allocating (`malloc`) a controlled string of the same size and then freeing it (`free`) in advance.
+Usually, the uninitialized values in heap chunks can be controlled by allocating (`malloc`) a controlled string of the same size and then freeing it (`free`) in advance.
 
 ## Exploitation
 
@@ -125,7 +125,7 @@ using [the PoC code of CVE-2021-30724](https://gist.github.com/jhftss/1bdb0f8340
      printf("response: %s\n", xpc_copy_description(res)); 
 ```
 
-The rest of the article will explain how to gain code execution in sandboxed root privilege through this vulnerability.
+The rest of the article will explain how to gain code execution in root privilege through this vulnerability.
 
 1. Controlling uninitialized values on the heap
 2. Inferring the daemon's memory layout using binary search
@@ -264,7 +264,7 @@ In addition, macOS allows [overcommit](https://en.wikipedia.org/wiki/Memory_over
 
 In `dyld private memory`, there are various function pointers to dyld. If the page is overwritten with attacker-controlled contents after `munmap`, the modified function pointers are used instead when calling the `dlsym` or `dlopen` functions.
 
-Closing the XPC connection will call the function pointer at offset `+0x330`, and you could also specify the contents pointed by the first argument.
+We saw that closing the XPC connection calls the function pointer at `dyld private memory+0x330`, and you could also specify the contents pointed by the first argument.
 Therefore, we performed stack pivot using `__setcontext` function and ROP.
 
 `__setcontext` function in x86_64:
