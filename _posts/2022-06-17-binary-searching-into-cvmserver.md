@@ -10,13 +10,13 @@ featured: true
 image: assets/images/2022-06-17/cvmserver.png
 ---
 
-While analyzing the patch for [CVE-2021-30724](https://www.trendmicro.com/en_us/research/21/f/CVE-2021-30724_CVMServer_Vulnerability_in_macOS_and_iOS.html) for writing a Fermium-252 report, I ([@jinmo123](https://twitter.com/jinmo123)) discovered a problem with the patch. The vulnerability was reported to Apple and patched in [macOS 12.4](https://support.apple.com/HT213257). It was fun to exploit.
+During the analysis of the patch for [CVE-2021-30724](https://www.trendmicro.com/en_us/research/21/f/CVE-2021-30724_CVMServer_Vulnerability_in_macOS_and_iOS.html) while writing a Fermium-252 report, our researcher ([@jinmo123](https://twitter.com/jinmo123)) discovered a vulnerability introduced by the patch. The vulnerability was reported to Apple and fixed in [macOS 12.4](https://support.apple.com/HT213257). It was a fun bug to exploit.
 
 ## Background
 
-When rendering OpenGL shaders on macOS with CPU, the program delegates shader compilation to the CVMServer daemon. It is compiled into native code and returned to the program as executable memory pages.
+When rendering OpenGL shaders on macOS using the CPU, the program delegates shader compilation to the CVMServer daemon. The daemon compiles the shader into native code, which is returned to the program as executable memory pages.
 
-CVMServer is an XPC service running with root privileges (`com.apple.cvmsServ`),
+CVMServer is an XPC service (`com.apple.cvmsServ`), running with root privileges,
 [accessible from the Safari renderer sandbox:](https://github.com/WebKit/WebKit/blob/1cdb127409d6de7ffa69da49a388d1e510de1c73/Source/WebKit/WebProcess/com.apple.WebProcess.sb.in#L320)
 
 ```lisp
@@ -29,12 +29,12 @@ CVMServer is an XPC service running with root privileges (`com.apple.cvmsServ`),
 )
 ```
 
-Then, Mickey Jin of Trend Micro reported an integer underflow vulnerability ([CVE-2021-30724](https://www.trendmicro.com/en_us/research/21/f/CVE-2021-30724_CVMServer_Vulnerability_in_macOS_and_iOS.html)).
+Mickey Jin of Trend Micro reported an integer underflow vulnerability ([CVE-2021-30724](https://www.trendmicro.com/en_us/research/21/f/CVE-2021-30724_CVMServer_Vulnerability_in_macOS_and_iOS.html)) in this service.
 However, the patch introduced a new uninitialized memory vulnerability. This article describes the vulnerability (CVE-2022-26721) and some knowledge gained during the exploitation process.
 
 ### Background: CVE-2021-30724
 
-In CVMServer, `cvmsServInitializeConnection` processes XPC messages. The following code processes messages with the `"message"` field set to 10 or 18.
+In CVMServer, `cvmsServInitializeConnection` processes XPC messages. The following code snippet is responsible for processing messages whose `"message"` field is set to `10` or `18`.
 
 ```c++
 xpc_object_t content = xpc_dictionary_get_value(req, "source");
@@ -93,7 +93,7 @@ The patch for CVE-2021-30724 added the code below to prevent the integer underfl
     if(mapped_size < offset) break; // [2]
 ```
 
-However, when the `break` statement in [2] executes, the `i+1`-th element of `mappedBaseAddress` and `mappedLength` remains uninitialized, which becomes problematic in the cleanup part afterward.
+However, when the `break` statement in [2] executes, the `i+1`-th elements of `mappedBaseAddress` and `mappedLength` remain uninitialized, which is problematic as they are used in the cleanup code.
 
 ```c
 // cleanup
@@ -115,7 +115,7 @@ Usually, it is done by allocating (`malloc`) a controlled string of the same siz
 ## Exploitation
 
 To demonstrate the vulnerability,
-from [the PoC code of CVE-2021-30724](https://gist.github.com/jhftss/1bdb0f8340bfd56f7f645c080e094a8b), change the number of `source` from 1 to 2. Executing the PoC multiple times will crash CVMServer due to the uninitialized value of `mappedLength[1]`.
+using [the PoC code of CVE-2021-30724](https://gist.github.com/jhftss/1bdb0f8340bfd56f7f645c080e094a8b), change the number of `source` from 1 to 2. Executing the PoC multiple times will crash CVMServer due to the uninitialized value of `mappedLength[1]`.
 
 ```diff
 -    xpc_dictionary_set_value(req, "source", xpc_array_create(&xarr, 1));
@@ -125,7 +125,7 @@ from [the PoC code of CVE-2021-30724](https://gist.github.com/jhftss/1bdb0f8340b
      printf("response: %s\n", xpc_copy_description(res)); 
 ```
 
-The rest of the article will explain how to gain a code execution in sandboxed root privilege through this vulnerability.
+The rest of the article will explain how to gain code execution in sandboxed root privilege through this vulnerability.
 
 1. Controlling uninitialized values on the heap
 2. Inferring the daemon's memory layout using binary search
@@ -157,7 +157,7 @@ void spray_value(xpc_object_t msg, void *payload, size_t size) {
 }
 ```
 
-The deserialization code of the XPC receiver receives the second `"free"` key and frees the value `subdict` assigned to the first `"free"` key. This will be the pre-initialization contents of the allocated malloc chunk.
+The deserialization code of the XPC receiver receives the second `"free"` key and frees the value `subdict` assigned to the first `"free"` key. This will be the pre-initialized contents of the allocated malloc chunk.
 
 ### 2. Inferring the daemon's memory layout using binary search
 
@@ -171,9 +171,9 @@ Exception Message: offset=0x000000010f819000, flavor=0x00000001 (DEALLOC_GAP)
 
 <figcaption>A crash occurs when calling munmap on a non-allocated address.</figcaption>
 
-By design of macOS, the library address is the same for all processes so that attackers can know the library address in advance. However, the mmap function of macOS does not return the address after `0x7ff800000000`, and the library address is located after there, so the reallocation is not possible. So we need another address to call `munmap`.
+By design of macOS, the library address is the same for all processes, so the attackers can know the library address in advance. However, the mmap function of macOS does not return an address after `0x7ff800000000`, and the library address is located after there, so reallocation is not possible. We need a different address to use with `munmap`.
 
-As mentioned earlier, message handlers for #10 and #18 allocate the shared memory object sent to XPC several times within the CVMServer:
+As shown in the earlier snippet, the message handler code for `10` and `18` allocate the shared memory object sent to XPC several times within the CVMServer:
 
 ```c++
 xpc_object_t content = xpc_dictionary_get_value(req, "source");
@@ -258,7 +258,7 @@ Source: <a href="https://github.com/apple-open-source/macos/blob/4c64a93f78278a4
 </figcaption>
 
 
-In addition, macOS allows [overcommit](https://en.wikipedia.org/wiki/Memory_overcommitment), so you can allocate a memory map larger than the actual RAM size. This makes it possible to fill all those gaps with memory mapping. The backing memory is lazily allocated when a read/write access is attempted to the address. In our case, munmap is called without memory access, so memory does not run out.
+In addition, macOS allows [overcommit](https://en.wikipedia.org/wiki/Memory_overcommitment), so you can allocate a memory map larger than the actual RAM size. This makes it possible to fill all those gaps with memory mappings. The backing memory is lazily allocated when a read/write access is attempted to the address. In our case, munmap is called without memory access, so memory does not run out.
 
 ### 3. Manipulating dyld private memory and calling arbitrary functions
 
@@ -283,7 +283,7 @@ __setcontext    proc near
 __setcontext    endp
 ```
 
-Since CVMServer can read arbitrary files in the system, I wrote a PoC that outputs the contents of `/var/db/SystemKey`. The content can be used to decrypt any keychain file within macOS using external tools, e.g. [chainbreaker](https://github.com/n0fate/chainbreaker).
+Since CVMServer can read arbitrary files in the system, we wrote a PoC that outputs the contents of `/var/db/SystemKey`. The content can be used to decrypt any keychain file within macOS using external tools, e.g. [chainbreaker](https://github.com/n0fate/chainbreaker).
 
 <div class="row justify-content-center">
 <div class="col col-md-8">
@@ -303,7 +303,7 @@ Apple patched it in macOS 12.4 by replacing malloc with calloc.
 
 ## Conclusion
 
-I was glad to have a chance to break ASLR with binary search.
+We were glad to have a chance to break ASLR with binary search.
 
 #### Further Reading
 
