@@ -6,7 +6,7 @@ description:
 categories: [ research ]
 tags: [ macOS, LPE ]
 comments: true
-featured: true
+featured: false
 image: assets/images/2022-06-17/cvmserver.png
 ---
 
