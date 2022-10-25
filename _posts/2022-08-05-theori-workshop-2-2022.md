@@ -6,7 +6,7 @@ description:
 categories: [ culture ]
 tags: [ Culture, Theori, Workshop ]
 comments: true
-featured: true
+featured: false
 image: assets/images/2022-08-05/thumbnail.jpg
 ---
 
