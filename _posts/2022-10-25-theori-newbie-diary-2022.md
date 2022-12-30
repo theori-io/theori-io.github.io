@@ -6,7 +6,7 @@ description:
 categories: [ culture ]
 tags: [ Culture, People, Theori, Dreamhack ]
 comments: true
-featured: true
+featured: false
 image: assets/images/2022-10-25/thumbnail.png
 ---
 
