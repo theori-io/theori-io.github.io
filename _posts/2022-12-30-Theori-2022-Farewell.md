@@ -10,7 +10,7 @@ featured: true
 image: assets/images/2022-12-30/thumbnail.png
 ---
 
-![](assets/images/2022-12-30/thumbnail.png)
+![](/assets/images/2022-12-30/thumbnail.png)
 
 안녕하세요 otwi입니다 🎅
 
