@@ -10,6 +10,8 @@ featured: true
 image: assets/images/2022-12-30/thumbnail.png
 ---
 
+![](assets/images/2022-12-30/thumbnail.png)
+
 안녕하세요 otwi입니다 🎅
 
 거리를 가득 채운 불빛과 끊임없이 들리는 캐롤 덕분에 연말 분위기가 물씬 풍기는 12월이에요 🎄 SNS로 공유되는 올해의 블로그, 연말 결산 등을 보며 이렇게 또 1년이 지나가는구나,, 생각이 듭니다. 티오리의 교육 커뮤니티, 드림핵의 [**연말 결산**](https://dreamhack.io/board/notice/209 "https://dreamhack.io/board/notice/209") 업무를 하던 중 반가운 슬랙 메시지를 받았어요!
@@ -24,7 +26,7 @@ image: assets/images/2022-12-30/thumbnail.png
 
 주어진 업무를 하나 둘 해결하다 보니 벌써 연말을 맞이했지만, 올해는 크고 작은 일이 많았어요. 꾸준히 늘어난 티오리 멤버와 새롭게 구성한 팀, 조금씩 바뀌는 체계 등. 한 해를 잘 적응하고 함께 노력한 멤버들에게 송년회 안내 문구가 위안을 주는 것 같았습니다. (사실 성과 및 차년도 목표/비전을 공유한다는 내용이 요점이지만요 ㅎㅎ)
 
-티오리는 1년에 평균적으로 두 번 워크샵을 진행해요. 올해 여름 워크샵이 조금 화려했기 때문에 이번엔 사무실에서 진행했습니다. ([**🔗 티오리의 여름 워크샵을 확인해 보세요!**](https://blog.theori.io/culture/theori-workshop-1-2022/ "https://blog.theori.io/culture/theori-workshop-1-2022/"))
+티오리는 1년에 평균적으로 두 번 워크샵을 진행해요. 올해 여름 워크샵은 제주도에서 진행했고 겨울은 따뜻한 사무실에서 진행했습니다! ([**🔗 티오리의 여름 워크샵을 확인해 보세요!**](https://blog.theori.io/culture/theori-workshop-1-2022/ "https://blog.theori.io/culture/theori-workshop-1-2022/"))
 
 
 ![사진 2][사진2]
